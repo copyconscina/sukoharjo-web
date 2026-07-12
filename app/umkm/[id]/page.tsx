@@ -1,0 +1,184 @@
+import { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { umkmData } from "@/lib/data";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
+interface Props {
+  params: Promise<{ id: string }>
+}
+
+export async function generateStaticParams() {
+  return umkmData.map((u) => ({
+    id: u.id.toString(),
+  }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const u = umkmData.find((x) => x.id === parseInt(id));
+  if (!u) {
+    return {
+      title: "UMKM Tidak Ditemukan",
+    };
+  }
+  return {
+    title: `${u.name} — Detail UMKM Desa Sukoharjo`,
+    description: u.desc,
+  };
+}
+
+export default async function UmkmDetailPage({ params }: Props) {
+  const { id } = await params;
+  const u = umkmData.find((x) => x.id === parseInt(id));
+
+  if (!u) {
+    notFound();
+  }
+
+  const icTag = (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" width="18" height="18">
+      <path d="M20.59 13.41 12 22l-9-9V4a1 1 0 0 1 1-1h9z" />
+      <circle cx="7" cy="8" r="1.4" />
+    </svg>
+  );
+  const icPin = (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" width="18" height="18">
+      <path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  );
+  const icCal = (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" width="18" height="18">
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <line x1="16" y1="3" x2="16" y2="7" />
+      <line x1="8" y1="3" x2="8" y2="7" />
+      <line x1="3" y1="11" x2="21" y2="11" />
+    </svg>
+  );
+  const icShare = (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" width="18" height="18">
+      <circle cx="18" cy="5" r="3" />
+      <circle cx="6" cy="12" r="3" />
+      <circle cx="18" cy="19" r="3" />
+      <line x1="8.6" y1="13.5" x2="15.4" y2="17.5" />
+      <line x1="15.4" y1="6.5" x2="8.6" y2="10.5" />
+    </svg>
+  );
+  const icChat = (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" width="18" height="18">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+
+  const waText = encodeURIComponent(
+    `Halo ${u.name}, saya melihat profil usaha Anda di Website Desa Sukoharjo dan tertarik untuk bertanya lebih lanjut.`
+  );
+
+  return (
+    <div className="font-sans">
+      {/* PAGE HEADER */}
+      <div className="page-header">
+        <div className="wrap">
+          <Button asChild className="btn btn-ghost border border-white/35" style={{ marginBottom: "20px", display: "inline-flex" }}>
+            <Link href="/umkm">← Kembali ke Database</Link>
+          </Button>
+          <p className="eyebrow on-dark">Detail UMKM</p>
+          <h1 style={{ marginTop: "8px" }}>{u.name}</h1>
+        </div>
+      </div>
+
+      {/* DETAIL CONTENT */}
+      <section className="block">
+        <div className="wrap two-col">
+          <div>
+            <div
+              style={{
+                height: "240px",
+                background: u.grad,
+                borderRadius: "var(--radius)",
+                marginBottom: "24px",
+                position: "relative",
+              }}
+            >
+              <Badge
+                className="border-none"
+                style={{
+                  position: "absolute",
+                  top: "16px",
+                  left: "16px",
+                  background: "rgba(33, 47, 28, 0.75)",
+                  color: "#fff",
+                  fontFamily: "var(--font-mono)",
+                  textTransform: "uppercase",
+                  fontSize: "10px",
+                  padding: "6px 12px",
+                  borderRadius: "100px",
+                  letterSpacing: ".05em",
+                }}
+              >
+                {u.category}
+              </Badge>
+            </div>
+            <h2 style={{ marginBottom: "12px" }}>Deskripsi Usaha</h2>
+            <p style={{ fontSize: "15px", lineHeight: "1.6", color: "var(--ink-soft)" }}>
+              {u.desc}
+            </p>
+          </div>
+
+          <Card className="card border border-[color:var(--line)] shadow-none" style={{ padding: "30px", borderRadius: "var(--radius)" }}>
+            <h3 style={{ borderBottom: "1px solid var(--line)", paddingBottom: "12px", marginBottom: "16px" }}>
+              Informasi Usaha
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              <div className="detail-row">
+                {icTag}
+                <div>
+                  <div className="lbl">Produk Unggulan</div>
+                  <div className="val" style={{ fontWeight: "600" }}>{u.product}</div>
+                </div>
+              </div>
+              <div className="detail-row">
+                {icPin}
+                <div>
+                  <div className="lbl">Alamat</div>
+                  <div className="val">{u.address}</div>
+                </div>
+              </div>
+              <div className="detail-row">
+                {icCal}
+                <div>
+                  <div className="lbl">Tahun Berdiri</div>
+                  <div className="val">{u.year}</div>
+                </div>
+              </div>
+              {u.social ? (
+                <div className="detail-row">
+                  {icShare}
+                  <div>
+                    <div className="lbl">Media Sosial</div>
+                    <div className="val">{u.social}</div>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+
+            <div style={{ marginTop: "30px" }}>
+              <Button asChild className="btn btn-wa border-none w-full" style={{ display: "inline-flex", justifyContent: "center" }}>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`https://wa.me/${u.wa}?text=${waText}`}
+                >
+                  {icChat} <span style={{ marginLeft: "8px" }}>Hubungi via WhatsApp</span>
+                </a>
+              </Button>
+            </div>
+          </Card>
+        </div>
+      </section>
+    </div>
+  );
+}

@@ -1,65 +1,188 @@
-import Image from "next/image";
+import { Metadata } from "next";
+import Link from "next/link";
+import { umkmData, beritaData, galeriData, potensiData, STAT } from "@/lib/data";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
+export const metadata: Metadata = {
+  title: "Selamat Datang di Desa Sukoharjo — Tirtomoyo, Wonogiri",
+  description: "Website Resmi Pemerintah Desa Sukoharjo, Kecamatan Tirtomoyo, Kabupaten Wonogiri — media informasi desa dan etalase digital UMKM warga.",
+};
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="font-sans">
+      {/* HERO SECTION */}
+      <div className="hero">
+        <div className="terraces" aria-hidden="true">
+          <svg viewBox="0 0 1200 520" preserveAspectRatio="none">
+            <polygon points="0,520 0,420 1200,470 1200,520" fill="#2d4425" />
+            <polygon points="0,420 0,340 1200,400 1200,470" fill="#39542f" />
+            <polygon points="0,340 0,270 1200,330 1200,400" fill="#44603a" />
+            <polygon points="0,270 0,210 1200,260 1200,330" fill="#4d6b40" opacity="0.9" />
+          </svg>
+        </div>
+        <div className="hero-inner">
+          <p className="eyebrow on-dark">Website Resmi Pemerintah Desa</p>
+          <h1>
+            Sukoharjo, desa yang tumbuh dari <em>sawah, karya, dan usaha warganya.</em>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="lead">
+            Terletak di lereng Tirtomoyo, Wonogiri — Sukoharjo menghubungkan cerita desa dengan etalase digital produk UMKM warganya, dari tiwul hingga batik tulis.
           </p>
+          <div className="hero-cta">
+            <Button asChild className="btn btn-primary border-none">
+              <Link href="/umkm">Jelajahi Database UMKM</Link>
+            </Button>
+            <Button asChild className="btn btn-ghost border border-white/35">
+              <Link href="/profil">Kenali Desa Kami</Link>
+            </Button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </div>
+      <div className="terrace-divider" aria-hidden="true">
+        <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+          <polygon points="0,60 0,30 300,55 600,20 900,50 1200,10 1200,60" fill="#f1eee0" />
+        </svg>
+      </div>
+
+      {/* STAT STRIP */}
+      <div className="stat-strip wrap" style={{ borderTop: "none" }}>
+        <div className="stat">
+          <div className="num">{STAT.dusun}</div>
+          <div className="lbl">Dusun</div>
         </div>
-      </main>
+        <div className="stat">
+          <div className="num">{STAT.population}</div>
+          <div className="lbl">Jiwa Penduduk</div>
+        </div>
+        <div className="stat">
+          <div className="num">{STAT.umkm}+</div>
+          <div className="lbl">UMKM Terdaftar</div>
+        </div>
+        <div className="stat">
+          <div className="num">{STAT.categories}</div>
+          <div className="lbl">Kategori Usaha</div>
+        </div>
+      </div>
+
+      {/* PROFIL SINGKAT */}
+      <section className="block">
+        <div className="wrap two-col">
+          <div>
+            <p className="eyebrow">Profil Singkat</p>
+            <h2 style={{ marginTop: "10px" }}>Desa berbukit di jalur Tirtomoyo–Baturetno</h2>
+            <p style={{ marginTop: "16px" }}>
+              Sukoharjo berada di kawasan perbukitan selatan Wonogiri, dikelilingi sawah berundak dan kebun mete. Sebagian besar warga menggantungkan hidup dari pertanian lahan kering, peternakan, dan usaha rumahan yang diwariskan turun-temurun — mulai dari olahan singkong, jamu gendong, hingga anyaman bambu.
+            </p>
+            <p style={{ marginTop: "12px" }}>
+              Melalui website ini, pemerintah desa ingin menghadirkan satu pintu informasi: profil desa yang transparan, dan etalase digital bagi pelaku UMKM agar produk mereka lebih mudah ditemukan.
+            </p>
+          </div>
+          <div className="umkm-mini" style={{ flexDirection: "column", gap: "14px" }}>
+            {umkmData.slice(0, 2).map((u) => (
+              <Card key={u.id} className="umkm-mini border border-[color:var(--line)] shadow-none" style={{ width: "100%" }}>
+                <div className="thumb" style={{ background: u.grad }} />
+                <div>
+                  <div className="cat">{u.category}</div>
+                  <h3 className="font-heading">{u.name}</h3>
+                  <p style={{ fontSize: "13px" }}>
+                    {u.id === 1
+                      ? "Olahan singkong khas Wonogiri sejak 2005."
+                      : "Motif parang lereng, diwariskan tiga generasi."}
+                  </p>
+                </div>
+              </Card>
+            ))}
+            <Button asChild className="btn btn-dark border-none" style={{ alignSelf: "flex-start" }}>
+              <Link href="/umkm">Lihat Semua UMKM Unggulan</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* POTENSI DESA (RINGKAS) */}
+      <section className="block on-parchment2 tight">
+        <div className="wrap">
+          <div className="section-head" style={{ maxWidth: "100%" }}>
+            <p className="eyebrow">Potensi Desa</p>
+            <h2 style={{ marginTop: "10px" }}>Kekayaan alam dan usaha yang bisa dikembangkan</h2>
+          </div>
+          <div className="grid cols-4" style={{ marginTop: "24px" }}>
+            {potensiData.slice(0, 4).map((p) => (
+              <Card key={p.num} className="card shadow-none border border-[color:var(--line)]" style={{ padding: "20px" }}>
+                <div
+                  className="eyebrow"
+                  style={{ fontSize: "1.4rem", fontFamily: "var(--font-display)", fontStyle: "italic", marginBottom: "8px" }}
+                >
+                  {p.num}
+                </div>
+                <h3 style={{ marginBottom: "8px" }}>{p.title}</h3>
+                <p style={{ fontSize: "13px" }}>{p.desc}</p>
+              </Card>
+            ))}
+          </div>
+          <div style={{ marginTop: "32px", textAlign: "center" }}>
+            <Button asChild className="btn btn-dark border-none">
+              <Link href="/umkm">Lihat Bukti Nyata: Database UMKM Desa →</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* GALERI PREVIEW */}
+      <section className="block tight">
+        <div className="wrap">
+          <div className="section-head">
+            <p className="eyebrow">Dokumentasi</p>
+            <h2 style={{ marginTop: "10px" }}>Momen dari Desa Sukoharjo</h2>
+          </div>
+          <div className="gal-grid" style={{ marginTop: "24px" }}>
+            {galeriData.slice(0, 4).map((g, idx) => (
+              <div key={idx} className="gal-tile" style={{ background: g.grad }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                  <circle cx="11" cy="11" r="7" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <span>{g.label}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: "32px", textAlign: "center" }}>
+            <Button asChild className="btn btn-dark border-none">
+              <Link href="/galeri">Lihat Galeri Lengkap</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* INFORMASI TERBARU */}
+      <section className="block on-parchment2 tight">
+        <div className="wrap">
+          <div className="section-head">
+            <p className="eyebrow">Informasi Terbaru</p>
+            <h2 style={{ marginTop: "10px" }}>Kabar dari Balai Desa</h2>
+          </div>
+          <div className="grid cols-3" style={{ marginTop: "24px" }}>
+            {beritaData.slice(0, 3).map((b, idx) => (
+              <Card key={idx} className="card info-card shadow-none border border-[color:var(--line)]">
+                <Badge className={`tag ${b.cls} border-none w-fit inline-flex justify-center`} variant="default" style={{ height: "auto" }}>
+                  {b.tag}
+                </Badge>
+                <h3 className="font-heading" style={{ marginTop: "14px" }}>{b.title}</h3>
+                <p style={{ marginTop: "6px" }}>{b.desc}</p>
+                <div className="date">{b.date}</div>
+              </Card>
+            ))}
+          </div>
+          <div style={{ marginTop: "32px", textAlign: "center" }}>
+            <Button asChild className="btn btn-dark border-none">
+              <Link href="/berita">Lihat Semua Berita</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
