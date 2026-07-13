@@ -3,6 +3,7 @@ import { Fraunces, Public_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
+import WonogiriLogo from "@/components/WonogiriLogo";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -43,10 +44,7 @@ export default function RootLayout({
           <div className="wrap footer-grid">
             <div>
               <div className="brand" style={{ marginBottom: "12px" }}>
-                <svg className="brand-mark" viewBox="0 0 40 40" fill="none">
-                  <circle cx="20" cy="20" r="19" fill="#39542f" />
-                  <path d="M20 8 L26 19 L20 30 L14 19 Z" fill="#d8a83a" />
-                </svg>
+                <WonogiriLogo className="brand-mark" />
                 <span className="brand-text" style={{ color: "#fcfcf8" }}>
                   Desa Sukoharjo
                 </span>

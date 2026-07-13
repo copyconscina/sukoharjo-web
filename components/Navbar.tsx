@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import WonogiriLogo from "@/components/WonogiriLogo";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -22,11 +23,7 @@ export default function Navbar() {
     <div className="nav">
       <div className="nav-inner">
         <Link href="/" className="brand">
-          <svg className="brand-mark" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="19" fill="#39542f" />
-            <path d="M20 8 L26 19 L20 30 L14 19 Z" fill="#d8a83a" />
-            <path d="M20 14 L23 20 L20 26 L17 20 Z" fill="#212f1c" />
-          </svg>
+          <WonogiriLogo className="brand-mark" />
           <span className="brand-text">
             Desa Sukoharjo
             <span>Kec. Tirtomoyo · Kab. Wonogiri</span>
