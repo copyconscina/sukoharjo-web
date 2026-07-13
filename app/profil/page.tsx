@@ -187,6 +187,7 @@ export default function ProfilPage() {
                   </p>
                 </div>
               </div>
+              <div className="contact-item">
                 <div>
                   <h3>Email</h3>
                   <p>desasukoharjotio11@gmail.go.id</p>
