@@ -81,6 +81,7 @@ export default function RootLayout({
                 <li>23RP+578, Sukorejo, Sukoharjo</li>
                 <li>Kec. Tirtomoyo, Kab. Wonogiri</li>
                 <li>Jawa Tengah 57672</li>
+                <li>Telp: (0821) 38002221</li>
               </ul>
             </div>
           </div>

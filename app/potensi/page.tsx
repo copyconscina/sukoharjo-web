@@ -34,8 +34,7 @@ export default function PotensiPage() {
             <p className="eyebrow">Gambaran Umum</p>
             <h2 style={{ marginTop: "10px" }}>Potensi utama yang bisa diolah menjadi penggerak ekonomi</h2>
             <p style={{ marginTop: "16px" }}>
-              Desa Sukoharjo punya kombinasi lahan pertanian, hasil perkebunan, perajin rumahan, dan peternakan yang saling terhubung.
-              Beberapa sektor sudah berjalan, sisanya masih punya ruang besar untuk dikembangkan lewat promosi digital, kemasan, dan kolaborasi antarwarga.
+              Desa Sukoharjo punya kombinasi lahan pertanian berbukit, hasil perkebunan (kelapa, cengkeh, kopi, janggelan), perajin rumahan, dan industri olahan pangan yang saling terhubung. Beberapa sektor sudah berjalan lewat kelompok tani dan koperasi desa, sisanya masih punya ruang besar untuk dikembangkan lewat promosi digital, kemasan, dan kolaborasi antarwarga.
             </p>
             <p style={{ marginTop: "12px" }}>
               Halaman ini dibuat untuk memudahkan warga, investor kecil, maupun pendamping desa melihat bidang mana yang paling siap didorong lebih jauh.
@@ -44,10 +43,10 @@ export default function PotensiPage() {
           <Card className="card border border-[color:var(--line)] shadow-none" style={{ padding: "24px" }}>
             <p className="eyebrow">Fokus Pengembangan</p>
             <ul style={{ marginTop: "14px", paddingLeft: "18px", color: "var(--ink-soft)", display: "grid", gap: "10px" }}>
-              <li>Penguatan komoditas pertanian lahan kering.</li>
-              <li>Pengemasan produk mete dan olahan singkong.</li>
-              <li>Digitalisasi promosi kerajinan dan batik lokal.</li>
-              <li>Pengembangan wisata alam dan agrowisata perbukitan.</li>
+              <li>Konservasi dan penguatan lahan pertanian kering berbukit.</li>
+              <li>Pengemasan hasil perkebunan serta produk industri rumahan.</li>
+              <li>Digitalisasi promosi kerajinan anyaman bambu dan genteng khas Sukoharjo.</li>
+              <li>Penguatan kelembagaan ekonomi desa lewat Koperasi Desa Merah Putih (KDMP).</li>
             </ul>
           </Card>
         </div>
@@ -84,25 +83,25 @@ export default function PotensiPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginTop: "24px" }}>
               <Card className="card border border-[color:var(--line)] shadow-none" style={{ padding: "20px" }}>
                 <h3 className="font-heading">Produk olahan pangan</h3>
-                <p>Singkong, tiwul, keripik, dan jamu punya basis produksi yang sudah ada dan bisa diperkuat lewat kemasan serta branding.</p>
+                <p> Jamur, tempe, dan aneka makanan ringan punya basis produksi yang sudah berjalan di wilayah Tirtomoyo dan bisa diperkuat lewat kemasan serta branding khas Sukoharjo.</p>
               </Card>
               <Card className="card border border-[color:var(--line)] shadow-none" style={{ padding: "20px" }}>
                 <h3 className="font-heading">Kerajinan lokal</h3>
-                <p>Bambu, pandan, dan batik tulis punya nilai jual tinggi jika dipaketkan sebagai produk khas desa.</p>
+                <p>Anyaman bambu dan genteng punya nilai jual tinggi jika dipaketkan sebagai produk khas desa dan dipromosikan lewat kanal digital.</p>
               </Card>
               <Card className="card border border-[color:var(--line)] shadow-none" style={{ padding: "20px" }}>
                 <h3 className="font-heading">Wisata desa</h3>
-                <p>Perbukitan, sawah berundak, dan udara sejuk berpotensi jadi jalur wisata sederhana yang mendukung UMKM setempat.</p>
+                <p>Lahan berbukit yang tengah direhabilitasi lewat penanaman sengon berpotensi jadi jalur agrowisata dan edukasi konservasi lahan, sekaligus mendukung UMKM setempat.</p>
               </Card>
             </div>
           </div>
           <div className="vm-card border-none shadow-none">
             <h3>Langkah yang bisa diambil</h3>
             <p>
-              Mulai dari pendataan pelaku usaha, pelatihan pengemasan, sampai promosi lewat website desa dan media sosial.
+              Mulai dari pendataan pelaku usaha, pelatihan pengemasan hasil kebun dan olahan pangan, sampai promosi lewat website desa dan media sosial dengan koperasi desa (KDMP) sebagai penggerak awal.
             </p>
             <p style={{ marginTop: "14px" }}>
-              Kalau ingin melihat pelaku usaha yang sudah berjalan, buka database UMKM. Kalau ingin mengenal latar wilayahnya, lihat profil desa.
+              Jika ingin melihat pelaku usaha yang sudah berjalan, buka database UMKM. Jika ingin mengenal latar wilayahnya, lihat profil desa.
             </p>
             <div className="hero-cta" style={{ marginTop: "24px" }}>
               <Button asChild className="btn btn-primary border-none">
