@@ -1,0 +1,31 @@
+import { Metadata } from "next";
+import { getGaleriList } from "@/lib/db";
+import GaleriList from "@/components/GaleriList";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Galeri Desa Sukoharjo",
+  description: "Dokumentasi foto kegiatan warga, database UMKM, dan potensi Desa Sukoharjo, Kecamatan Tirtomoyo, Kabupaten Wonogiri.",
+};
+
+export default function GaleriPage() {
+  const galeriData = getGaleriList();
+
+  return (
+    <div className="font-sans">
+      {/* PAGE HEADER */}
+      <div className="page-header">
+        <div className="wrap">
+          <p className="eyebrow on-dark">Galeri</p>
+          <h1>Dokumentasi kegiatan, UMKM, dan potensi desa</h1>
+        </div>
+      </div>
+
+      {/* FILTER & GRID */}
+      <section className="block tight">
+        <GaleriList initialGaleriData={galeriData} />
+      </section>
+    </div>
+  );
+}

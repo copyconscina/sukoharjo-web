@@ -1,8 +1,10 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { potensiData } from "@/lib/data";
+import { getPotensiList } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Potensi Desa — Desa Sukoharjo",
@@ -10,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default function PotensiPage() {
+  const potensiData = getPotensiList();
   return (
     <div className="font-sans">
       <div className="page-header">

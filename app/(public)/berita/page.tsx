@@ -1,7 +1,9 @@
 import { Metadata } from "next";
-import { beritaData } from "@/lib/data";
+import { getBeritaList } from "@/lib/db";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Berita Desa Sukoharjo",
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default function BeritaPage() {
+  const beritaData = getBeritaList();
   return (
     <div className="font-sans">
       {/* PAGE HEADER */}

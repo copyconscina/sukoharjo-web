@@ -1,16 +1,19 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { umkmData } from "@/lib/data";
+import { getUmkmList, getUmkmById } from "@/lib/db";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ id: string }>
 }
 
 export async function generateStaticParams() {
+  const umkmData = getUmkmList();
   return umkmData.map((u) => ({
     id: u.id.toString(),
   }));
@@ -18,7 +21,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const u = umkmData.find((x) => x.id === parseInt(id));
+  const u = getUmkmById(parseInt(id));
   if (!u) {
     return {
       title: "UMKM Tidak Ditemukan",
@@ -32,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function UmkmDetailPage({ params }: Props) {
   const { id } = await params;
-  const u = umkmData.find((x) => x.id === parseInt(id));
+  const u = getUmkmById(parseInt(id));
 
   if (!u) {
     notFound();
@@ -97,7 +100,10 @@ export default async function UmkmDetailPage({ params }: Props) {
             <div
               style={{
                 height: "240px",
-                background: u.grad,
+                backgroundImage: u.image ? `url(${u.image})` : undefined,
+                background: u.image ? undefined : u.grad,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
                 borderRadius: "var(--radius)",
                 marginBottom: "24px",
                 position: "relative",

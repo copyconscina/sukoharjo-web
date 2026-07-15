@@ -10,6 +10,7 @@ export interface Umkm {
   wa: string
   social?: string
   grad: string
+  image?: string
 }
 
 export interface Berita {
@@ -24,6 +25,7 @@ export interface GaleriItem {
   label: string
   cat: string
   grad: string
+  image?: string
 }
 
 export interface Potensi {

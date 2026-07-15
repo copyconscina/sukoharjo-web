@@ -1,0 +1,47 @@
+import { redirect } from "next/navigation";
+import { checkAuthAction } from "../actions";
+import AdminSidebar from "@/components/AdminSidebar";
+
+export const dynamic = "force-dynamic";
+
+export default async function DashboardLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const isAuth = await checkAuthAction();
+
+  if (!isAuth) {
+    redirect("/admin/login");
+  }
+
+  return (
+    <div className="flex min-h-screen bg-[color:var(--parchment-2)] text-[color:var(--ink)] font-sans">
+      {/* Sidebar navigation */}
+      <AdminSidebar />
+
+      {/* Main Content Workspace */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top Header */}
+        <header className="h-16 border-b border-[color:var(--line)] bg-[color:var(--card)] px-8 flex items-center justify-between sticky top-0 z-30">
+          <div>
+            <span className="text-xs font-mono uppercase tracking-widest text-[color:var(--ink-soft)]">
+              Status Sesi:
+            </span>
+            <span className="text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded ml-2">
+              Administrator
+            </span>
+          </div>
+          <div className="text-xs text-[color:var(--ink-soft)]">
+            Website Desa Sukoharjo · Kab. Wonogiri
+          </div>
+        </header>
+
+        {/* Dynamic Pages */}
+        <main className="flex-1 p-8 overflow-y-auto max-w-7xl w-full mx-auto">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+}

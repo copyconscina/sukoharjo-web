@@ -1,9 +1,12 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { umkmData, beritaData, galeriData, potensiData, STAT } from "@/lib/data";
+import { STAT } from "@/lib/data";
+import { getUmkmList, getBeritaList, getGaleriList, getPotensiList } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Selamat Datang di Desa Sukoharjo — Tirtomoyo, Wonogiri",
@@ -11,6 +14,10 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  const umkmData = getUmkmList();
+  const beritaData = getBeritaList();
+  const galeriData = getGaleriList();
+  const potensiData = getPotensiList();
   return (
     <div className="font-sans">
       {/* HERO SECTION */}
@@ -78,7 +85,7 @@ export default function Home() {
           <div className="umkm-mini" style={{ flexDirection: "column", gap: "14px" }}>
             {umkmData.slice(0, 2).map((u) => (
               <Card key={u.id} className="umkm-mini border border-[color:var(--line)] shadow-none" style={{ width: "100%" }}>
-                <div className="thumb" style={{ background: u.grad }} />
+                <div className="thumb" style={u.image ? { backgroundImage: `url(${u.image})`, backgroundSize: "cover", backgroundPosition: "center" } : { background: u.grad }} />
                 <div>
                   <div className="cat">{u.category}</div>
                   <h3 className="font-heading">{u.name}</h3>
@@ -135,7 +142,7 @@ export default function Home() {
           </div>
           <div className="gal-grid" style={{ marginTop: "24px" }}>
             {galeriData.slice(0, 4).map((g, idx) => (
-              <div key={idx} className="gal-tile" style={{ background: g.grad }}>
+              <div key={idx} className="gal-tile" style={g.image ? { backgroundImage: `url(${g.image})`, backgroundSize: "cover", backgroundPosition: "center" } : { background: g.grad }}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
                   <circle cx="11" cy="11" r="7" />
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
