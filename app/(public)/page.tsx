@@ -75,11 +75,12 @@ export default async function Home() {
         <div className="wrap two-col">
           <div>
             <p className="eyebrow">Profil Singkat</p>
-            <h2 style={{ marginTop: "10px" }}>Desa berbukit di jalur Tirtomoyo–Baturetno</h2>
-            <p style={{ marginTop: "16px" }}>Desa Sukoharjo merupakan salah satu desa yang berada di Kecamatan Tirtomoyo, Kabupaten Wonogiri, Provinsi Jawa Tengah. Desa ini memiliki luas wilayah sekitar 837,77 hektare, yang didominasi oleh lahan kering seluas 637,31 hektare dan lahan sawah seluas 101,29 hektare. Secara administratif, Desa Sukoharjo berbatasan dengan Desa Girirejo (Kecamatan Jatiroto) di sebelah utara, Desa Hargosari (Kecamatan Karangtengah) di sebelah selatan, Desa Hargorejo (Kecamatan Nawangan) di sebelah timur, serta Desa Wiroko (Kecamatan Nguntoronadi) di sebelah barat.
+            <h2 style={{ marginTop: "10px" }}>Pesona Bentang Alam Perbukitan di Jalur Tirtomoyo–Baturetno</h2>
+            <p style={{ marginTop: "16px" }}>
+              Terletak strategis di Kecamatan Tirtomoyo, Kabupaten Wonogiri, Jawa Tengah, Desa Sukoharjo membentang di atas wilayah seluas 837,77 hektare. Potensi geografisnya diwarnai oleh bentang alam berupa 637,31 hektare lahan kering produktif serta 101,29 hektare area persawahan yang subur. Secara batas wilayah administratif, Desa Sukoharjo berdampingan langsung dengan Desa Girirejo di utara, Desa Hargosari di selatan, Desa Hargorejo di timur, serta Desa Wiroko di sebelah barat.
             </p>
             <p style={{ marginTop: "12px" }}>
-              Melalui website ini, pemerintah desa ingin menghadirkan satu pintu informasi: profil desa yang transparan, dan etalase digital UMKM sekaligus berita terbaru yang ada di Desa Sukoharjo.
+              Portal resmi ini hadir sebagai perpanjangan tangan layanan Pemerintah Desa Sukoharjo untuk menghadirkan pusat informasi satu pintu yang transparan. Di sini, masyarakat dapat mengakses data profil desa secara terbuka, mengikuti perkembangan kabar berita teraktual, serta menjelajahi etalase digital produk UMKM unggulan karya warga desa.
             </p>
           </div>
           <div className="umkm-mini" style={{ flexDirection: "column", gap: "14px" }}>

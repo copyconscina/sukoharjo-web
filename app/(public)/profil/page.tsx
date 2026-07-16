@@ -37,21 +37,21 @@ export default function ProfilPage() {
             </h2>
             <div className="timeline">
               <div>
-                <div className="yr">Pada masa Pemerintahan Belanda</div>
+                <div className="yr">Era Kolonial Belanda</div>
                 <p>
-                  nama Sukoharjo belum ada, wilayah ini merupakan bagian dari Desa Bonagung yang membentang dari Tirtomoyo sampai Baturetno. Pada waktu itu ada kesenian Srandil, banyak orang yang bersenang-senang dan beramai-ramai yang kemudian Pemerintah Belanda memberi nama Desa Sukoharjo.
+                  Sebelum dikenal dengan nama Sukoharjo, wilayah ini secara administratif merupakan bagian dari Desa Bonagung dengan cakupan daerah yang sangat luas membentang dari Tirtomoyo hingga Baturetno. Keberadaan kesenian tradisional Srandil yang kerap mendatangkan keramaian dan kebahagiaan bagi masyarakat setempat menginspirasi Pemerintah Kolonial Belanda kala itu untuk menyematkan nama Desa Sukoharjo.
                 </p>
               </div>
               <div>
-                <div className="yr">1941</div>
+                <div className="yr">1941 (Penggabungan Wilayah)</div>
                 <p>
-                  Kedua desa tersebut akhirnya digabung menjadi satu desa dengan nama Desa Sukoharjo, yang berarti desa yang makmur dan sejahtera. Nama ini diambil dari kata "suko" (makmur) dan "harjo" (sejahtera).
+                  Kedua wilayah administratif akhirnya secara resmi diintegrasikan menjadi satu kesatuan di bawah nama Desa Sukoharjo. Diambil dari perpaduan kata bahasa Jawa "Suko" yang bermakna kemakmuran atau kebahagiaan dan "Harjo" yang berarti keselamatan atau kesejahteraan, nama ini melambangkan harapan luhur terwujudnya desa yang makmur, aman, dan sentosa.
                 </p>
               </div>
               <div>
-                <div className="yr">1955-Sekarang</div>
+                <div className="yr">1955 – Sekarang</div>
                 <p>
-                  Setelah masa kepemimpinan Siswo Sutirto, jabatan Kepala Desa Sukoharjo secara berturut-turut dipegang oleh Sastro Darwoso (1955–2002), Sunarto (2002–2007 dan 2007–2012), Sartono (2012–2019), kemudian dijabat sementara oleh Prihastanto, SE., MM. sebagai penjabat kepala desa, hingga pada Pilkades 2019 Sunarto kembali terpilih dan menjabat sebagai Kepala Desa Sukoharjo sampai sekarang.
+                  Setelah periode kepemimpinan Siswo Sutirto, estafet kepemimpinan Desa Sukoharjo diampu secara berturut-turut oleh Sastro Darwoso (1955–2002), Sunarto (2002–2012), dan Sartono (2012–2019), sebelum sempat diisi oleh Prihastanto, SE., MM. sebagai Penjabat Kepala Desa. Melalui pemilihan kepala desa (Pilkades) tahun 2019, Sunarto kembali dipercaya oleh masyarakat untuk mengemban mandat sebagai Kepala Desa Sukoharjo hingga masa jabatan saat ini.
                 </p>
               </div>
               <div>
@@ -212,27 +212,17 @@ export default function ProfilPage() {
                 </div>
               </div>
             </div>
-            <Card className="map-box border-none shadow-none text-white">
-              <svg className="pin" viewBox="0 0 24 24" fill="none" stroke="#eec96e" strokeWidth="1.6">
-                <path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <div>
-                <h3 style={{ color: "#fff" }}>Kantor Desa Sukoharjo</h3>
-                <p style={{ color: "#cfd3bd", fontSize: "14px", marginTop: "6px" }}>
-                  Tirtomoyo, Wonogiri, Jawa Tengah
-                </p>
-              </div>
-              <Button asChild className="btn btn-primary border-none">
-                <a
-                  href="https://www.google.com/maps/search/?api=1&query=Desa+Sukoharjo+Tirtomoyo+Wonogiri"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Buka di Google Maps
-                </a>
-              </Button>
-            </Card>
+            <div style={{ height: "100%", minHeight: "340px", borderRadius: "var(--radius)", overflow: "hidden", border: "1px solid var(--line)", boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
+              <iframe
+                src="https://maps.google.com/maps?q=Kantor%20Kepala%20Desa%20Sukoharjo%20Tirtomoyo%20Wonogiri&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0, minHeight: "340px" }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
           </div>
         </div>
       </section>
