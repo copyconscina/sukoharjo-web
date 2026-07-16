@@ -53,7 +53,7 @@ export async function checkAuthAction(): Promise<boolean> {
 }
 
 // Berita Actions
-export async function addBeritaAction(tag: string, title: string, desc: string) {
+export async function addBeritaAction(tag: string, title: string, desc: string, images?: string) {
   const isAuth = await checkAuthAction();
   if (!isAuth) throw new Error("Unauthorized");
 
@@ -66,6 +66,7 @@ export async function addBeritaAction(tag: string, title: string, desc: string) 
     cls: tag.toLowerCase() === "pengumuman" ? "pengumuman" : tag.toLowerCase() === "pembangunan" ? "pembangunan" : "",
     title,
     desc,
+    images,
   };
 
   await addBerita(newBerita);
@@ -87,7 +88,7 @@ export async function deleteBeritaAction(title: string) {
 }
 
 // Galeri Actions
-export async function addGaleriAction(label: string, cat: string, grad: string, image?: string) {
+export async function addGaleriAction(label: string, cat: string, grad: string, image?: string, desc?: string) {
   const isAuth = await checkAuthAction();
   if (!isAuth) throw new Error("Unauthorized");
 
@@ -96,6 +97,7 @@ export async function addGaleriAction(label: string, cat: string, grad: string, 
     cat,
     grad,
     image,
+    desc,
   };
 
   await addGaleri(newItem);
@@ -199,5 +201,52 @@ export async function uploadImageAction(formData: FormData) {
   } catch (err) {
     console.error("Failed to upload image to Supabase Storage:", err);
     return { success: false, error: "Gagal menyimpan gambar di cloud storage." };
+  }
+}
+
+export async function uploadMultipleImagesAction(formData: FormData) {
+  const isAuth = await checkAuthAction();
+  if (!isAuth) throw new Error("Unauthorized");
+
+  const files = formData.getAll("files") as File[];
+  if (!files || files.length === 0) {
+    return { success: false, error: "Tidak ada file yang diunggah." };
+  }
+
+  const urls: string[] = [];
+  try {
+    for (const file of files) {
+      if (file.size === 0) continue;
+      if (!file.type.startsWith("image/")) {
+        return { success: false, error: "Semua file harus berupa gambar (JPG, PNG, WebP, dll)." };
+      }
+
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+
+      const fileExtension = file.name.split(".").pop();
+      const uniqueFilename = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExtension}`;
+
+      const { error: uploadError } = await supabaseServer.storage
+        .from("sukoharjo-assets")
+        .upload(uniqueFilename, buffer, {
+          contentType: file.type,
+          duplex: "half",
+        } as any);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: publicUrlData } = supabaseServer.storage
+        .from("sukoharjo-assets")
+        .getPublicUrl(uniqueFilename);
+
+      urls.push(publicUrlData.publicUrl);
+    }
+    return { success: true, urls };
+  } catch (err) {
+    console.error("Failed to upload images:", err);
+    return { success: false, error: "Gagal mengunggah satu atau beberapa gambar ke storage." };
   }
 }

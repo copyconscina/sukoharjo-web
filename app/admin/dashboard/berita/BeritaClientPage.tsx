@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Berita } from "@/lib/data";
-import { addBeritaAction, deleteBeritaAction } from "@/app/admin/actions";
+import { addBeritaAction, deleteBeritaAction, uploadMultipleImagesAction } from "@/app/admin/actions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ export default function BeritaClientPage({ initialNews }: Props) {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [tag, setTag] = useState("Kegiatan");
+  const [files, setFiles] = useState<FileList | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,23 +36,48 @@ export default function BeritaClientPage({ initialNews }: Props) {
 
     setLoading(true);
     try {
-      const res = await addBeritaAction(tag, title.trim(), desc.trim());
+      let uploadedUrlsString = "";
+
+      // 1. Upload files if selected
+      if (files && files.length > 0) {
+        const formData = new FormData();
+        Array.from(files).forEach((file) => {
+          formData.append("files", file);
+        });
+
+        const uploadRes = await uploadMultipleImagesAction(formData);
+        if (!uploadRes.success || !uploadRes.urls) {
+          setError(uploadRes.error || "Gagal mengunggah foto berita.");
+          setLoading(false);
+          return;
+        }
+        uploadedUrlsString = uploadRes.urls.join(",");
+      }
+
+      // 2. Save news article
+      const res = await addBeritaAction(tag, title.trim(), desc.trim(), uploadedUrlsString);
       if (res.success) {
-        // Optimistically calculate current date format
         const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "short", year: "numeric" };
         const dateStr = new Date().toLocaleDateString("id-ID", options);
         
         const newArticle: Berita = {
           tag,
-          cls: tag.toLowerCase() === "pengumuman" ? "pengumuman" : "",
+          cls: tag.toLowerCase() === "pengumuman" ? "pengumuman" : tag.toLowerCase() === "pembangunan" ? "pembangunan" : "",
           title: title.trim(),
           desc: desc.trim(),
           date: dateStr,
+          images: uploadedUrlsString || undefined,
         };
 
         setNews([newArticle, ...news]);
         setTitle("");
         setDesc("");
+        setFiles(null);
+
+        // Reset file input element manually
+        const fileInput = document.getElementById("beritaFileInput") as HTMLInputElement;
+        if (fileInput) fileInput.value = "";
+
         setSuccess("Berita berhasil ditambahkan!");
       }
     } catch (err) {
@@ -82,6 +108,9 @@ export default function BeritaClientPage({ initialNews }: Props) {
     }
   };
 
+  // Convert FileList to preview URLs
+  const previewUrls = files ? Array.from(files).map((f) => URL.createObjectURL(f)) : [];
+
   return (
     <div className="flex flex-col gap-6 font-sans">
       <div>
@@ -90,7 +119,7 @@ export default function BeritaClientPage({ initialNews }: Props) {
           Kelola Berita & Pengumuman
         </h1>
         <p className="text-sm text-[color:var(--ink-soft)] mt-1">
-          Tambahkan pengumuman resmi desa, agenda rapat, kegiatan pembangunan, atau warta lainnya di balai desa.
+          Tambahkan pengumuman resmi desa, agenda rapat, kegiatan pembangunan, atau warta lainnya di balai desa, lengkap dengan galeri foto lampiran kegiatan.
         </p>
       </div>
 
@@ -121,7 +150,7 @@ export default function BeritaClientPage({ initialNews }: Props) {
 
               <div>
                 <label className="block text-xs font-mono uppercase tracking-wider text-[color:var(--ink-soft)] mb-1">
-                  Judul Berita
+                  Judul Berita *
                 </label>
                 <Input
                   type="text"
@@ -135,16 +164,53 @@ export default function BeritaClientPage({ initialNews }: Props) {
 
               <div>
                 <label className="block text-xs font-mono uppercase tracking-wider text-[color:var(--ink-soft)] mb-1">
-                  Isi / Ringkasan Berita
+                  Isi / Ringkasan Berita *
                 </label>
                 <textarea
                   placeholder="Tuliskan isi berita di sini..."
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}
-                  rows={4}
-                  className="w-full px-3 py-2 border border-[color:var(--line)] bg-[color:var(--parchment)] rounded-xl text-sm font-sans outline-none focus:border-[color:var(--forest)] resize-none"
+                  rows={6}
+                  className="w-full px-3 py-2 border border-[color:var(--line)] bg-[color:var(--parchment)] rounded-xl text-sm font-sans outline-none focus:border-[color:var(--forest)] resize-none leading-relaxed"
                 />
               </div>
+
+              <div>
+                <label className="block text-xs font-mono uppercase tracking-wider text-[color:var(--ink-soft)] mb-2">
+                  Upload Foto Lampiran (Bisa Pilih Beberapa)
+                </label>
+                <input
+                  type="file"
+                  id="beritaFileInput"
+                  multiple
+                  accept="image/*"
+                  onChange={(e) => setFiles(e.target.files)}
+                  className="w-full text-xs text-[color:var(--ink-soft)]
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border file:border-[color:var(--line)]
+                    file:text-xs file:font-semibold
+                    file:bg-[color:var(--parchment)] file:text-[color:var(--forest)]
+                    hover:file:bg-[color:var(--line)] cursor-pointer"
+                />
+              </div>
+
+              {/* Multiple Live Previews */}
+              {previewUrls.length > 0 && (
+                <div>
+                  <label className="block text-xs font-mono uppercase tracking-wider text-[color:var(--ink-soft)] mb-2">
+                    Foto yang Dipilih ({previewUrls.length})
+                  </label>
+                  <div className="flex gap-2 overflow-x-auto py-1">
+                    {previewUrls.map((url, i) => (
+                      <div
+                        key={i}
+                        className="w-16 h-16 rounded-xl border border-[color:var(--line)] bg-cover bg-center flex-shrink-0"
+                        style={{ backgroundImage: `url(${url})` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {error && (
                 <div className="p-3 text-xs bg-[color:var(--clay)]/10 text-[color:var(--clay)] border border-[color:var(--clay)]/20 rounded-lg">
@@ -168,7 +234,7 @@ export default function BeritaClientPage({ initialNews }: Props) {
                   borderRadius: "20px"
                 }}
               >
-                {loading ? "Menyimpan..." : "Simpan Berita"}
+                {loading ? "Menyimpan & Mengunggah..." : "Simpan Berita"}
               </Button>
             </form>
           </Card>
@@ -186,13 +252,13 @@ export default function BeritaClientPage({ initialNews }: Props) {
                 Belum ada berita yang ditambahkan.
               </div>
             ) : (
-              <div className="flex flex-col gap-4 max-h-[600px] overflow-y-auto pr-1">
+              <div className="flex flex-col gap-4 max-h-[700px] overflow-y-auto pr-1">
                 {news.map((item, idx) => (
                   <div
                     key={idx}
                     className="p-4 rounded-xl border border-[color:var(--line)] bg-[color:var(--parchment-2)] flex items-start justify-between gap-4"
                   >
-                    <div className="flex flex-col gap-1.5">
+                    <div className="flex flex-col gap-1.5 min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <Badge className={`tag ${item.cls} border-none w-fit inline-flex justify-center`} variant="default" style={{ height: "auto", fontSize: "10px" }}>
                           {item.tag}
@@ -201,12 +267,25 @@ export default function BeritaClientPage({ initialNews }: Props) {
                           {item.date}
                         </span>
                       </div>
-                      <h3 className="font-heading text-sm text-[color:var(--ink)]">
+                      <h3 className="font-heading text-sm text-[color:var(--ink)] truncate">
                         {item.title}
                       </h3>
-                      <p className="text-xs text-[color:var(--ink-soft)] line-clamp-2">
+                      <p className="text-xs text-[color:var(--ink-soft)] line-clamp-2 leading-relaxed">
                         {item.desc}
                       </p>
+
+                      {/* Display thumbnail strips */}
+                      {item.images && (
+                        <div className="flex gap-1.5 mt-2 overflow-x-auto pb-1">
+                          {item.images.split(",").map((imgUrl, i) => (
+                            <div 
+                              key={i} 
+                              className="w-10 h-10 rounded-lg border border-white/20 bg-cover bg-center flex-shrink-0 shadow-sm"
+                              style={{ backgroundImage: `url(${imgUrl})` }}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
 
                     <button

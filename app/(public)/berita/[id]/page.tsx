@@ -41,6 +41,8 @@ export default async function BeritaDetailPage({ params }: Props) {
     notFound();
   }
 
+  const imageList = b.images ? b.images.split(",") : [];
+
   const icCal = (
     <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" width="18" height="18">
       <rect x="3" y="5" width="18" height="16" rx="2" />
@@ -93,6 +95,30 @@ export default async function BeritaDetailPage({ params }: Props) {
               {icCal}
               <span>Dipublikasikan pada {b.date}</span>
             </div>
+            
+            {imageList.length === 1 && (
+              <div className="mb-8 rounded-xl overflow-hidden border border-[color:var(--line)] max-h-[420px] shadow-sm">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={imageList[0]} alt={b.title} className="w-full h-full object-cover" />
+              </div>
+            )}
+
+            {imageList.length > 1 && (
+              <div className="mb-8 flex flex-col gap-3">
+                <div className="rounded-xl overflow-hidden border border-[color:var(--line)] max-h-[380px] shadow-sm">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={imageList[0]} alt={b.title} className="w-full h-full object-cover" />
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {imageList.slice(1).map((imgUrl, i) => (
+                    <div key={i} className="rounded-lg overflow-hidden border border-[color:var(--line)] aspect-video shadow-sm">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={imgUrl} alt={`${b.title} gallery ${i + 1}`} className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             
             <article 
               className="prose max-w-none text-[color:var(--ink)]"

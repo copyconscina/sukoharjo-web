@@ -103,6 +103,7 @@ export async function getBeritaList(): Promise<Berita[]> {
       month: "short",
       year: "numeric",
     }),
+    images: b.images || null,
   })) as Berita[];
 }
 
@@ -129,6 +130,7 @@ export async function getBeritaById(id: number): Promise<Berita | undefined> {
       month: "short",
       year: "numeric",
     }),
+    images: data.images || null,
   } as Berita;
 }
 
@@ -141,6 +143,7 @@ export async function addBerita(item: Omit<Berita, "date"> & { date?: string }):
       title: item.title,
       desc: item.desc,
       published_at: new Date().toISOString(),
+      images: item.images || null,
     })
     .select()
     .single();
@@ -158,6 +161,7 @@ export async function addBerita(item: Omit<Berita, "date"> & { date?: string }):
       month: "short",
       year: "numeric",
     }),
+    images: data.images || null,
   };
 }
 
@@ -185,7 +189,14 @@ export async function getGaleriList(): Promise<GaleriItem[]> {
     console.error("Error fetching Galeri list:", error);
     return [];
   }
-  return data as GaleriItem[];
+  return data.map((g) => ({
+    id: g.id,
+    label: g.label,
+    cat: g.cat,
+    grad: g.grad || "",
+    image: g.image || null,
+    desc: g.desc || "",
+  })) as GaleriItem[];
 }
 
 export async function addGaleri(item: GaleriItem): Promise<GaleriItem> {
@@ -196,12 +207,20 @@ export async function addGaleri(item: GaleriItem): Promise<GaleriItem> {
       cat: item.cat,
       grad: item.grad || "",
       image: item.image || null,
+      desc: item.desc || null,
     })
     .select()
     .single();
 
   if (error) throw error;
-  return data as GaleriItem;
+  return {
+    id: data.id,
+    label: data.label,
+    cat: data.cat,
+    grad: data.grad || "",
+    image: data.image || null,
+    desc: data.desc || "",
+  } as GaleriItem;
 }
 
 export async function deleteGaleri(label: string): Promise<boolean> {

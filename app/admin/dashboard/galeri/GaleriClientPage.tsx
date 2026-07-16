@@ -20,6 +20,7 @@ export default function GaleriClientPage({ initialGallery }: Props) {
   // Form states
   const [label, setLabel] = useState("");
   const [cat, setCat] = useState("Kegiatan");
+  const [desc, setDesc] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,22 +53,24 @@ export default function GaleriClientPage({ initialGallery }: Props) {
       }
 
       // 2. Save the gallery item to database
-      const res = await addGaleriAction(label.trim(), cat, "", uploadRes.url);
+      const res = await addGaleriAction(label.trim(), cat, "", uploadRes.url, desc.trim());
       if (res.success) {
         const newItem: GaleriItem = {
           label: label.trim(),
           cat,
           grad: "",
           image: uploadRes.url,
+          desc: desc.trim(),
         };
         setGallery([newItem, ...gallery]);
         setLabel("");
+        setDesc("");
         setFile(null);
         // Reset file input element manually
         const fileInput = document.getElementById("galleryFileInput") as HTMLInputElement;
         if (fileInput) fileInput.value = "";
 
-        setSuccess("Item galeri berhasil ditambahkan dengan foto!");
+        setSuccess("Item galeri berhasil ditambahkan dengan foto dan keterangan!");
       }
     } catch (err) {
       console.error(err);
@@ -88,7 +91,7 @@ export default function GaleriClientPage({ initialGallery }: Props) {
     try {
       const res = await deleteGaleriAction(targetLabel);
       if (res.success) {
-        setGallery(gallery.filter((g) => g.label !== targetLabel));
+        setGallery(gallery.filter((item) => item.label !== targetLabel));
         setSuccess("Item galeri berhasil dihapus!");
       }
     } catch (err) {
@@ -102,35 +105,48 @@ export default function GaleriClientPage({ initialGallery }: Props) {
   return (
     <div className="flex flex-col gap-6 font-sans">
       <div>
-        <p className="eyebrow">Dokumentasi</p>
+        <p className="eyebrow">Galeri Desa</p>
         <h1 className="text-3xl font-heading mt-2" style={{ color: "var(--forest-deep)" }}>
-          Kelola Galeri Desa
+          Kelola Galeri Foto
         </h1>
         <p className="text-sm text-[color:var(--ink-soft)] mt-1">
-          Tambahkan foto dokumentasi kegiatan warga, profil usaha UMKM baru, atau pemandangan panorama potensi alam desa.
+          Tambahkan foto dokumentasi kegiatan warga, profil usaha UMKM baru, atau pemandangan panorama potensi alam desa beserta keterangan singkat kegiatannya.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Add Galeri Form */}
+        {/* Add Form */}
         <div className="lg:col-span-5">
           <Card className="border border-[color:var(--line)] p-6 bg-[color:var(--card)] shadow-sm">
             <h2 className="text-lg font-heading mb-4 text-[color:var(--forest-deep)]">
-              Tambah Item Galeri Baru
+              Tambah Foto Baru
             </h2>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div>
                 <label className="block text-xs font-mono uppercase tracking-wider text-[color:var(--ink-soft)] mb-1">
-                  Label / Keterangan Foto *
+                  Nama Kegiatan / Judul Foto *
                 </label>
                 <Input
                   type="text"
-                  placeholder="Contoh: Rapat Karang Taruna..."
+                  placeholder="Contoh: Kerja Bakti Dusun Ngrancah..."
                   value={label}
                   onChange={(e) => setLabel(e.target.value)}
                   className="w-full px-3 py-2 border border-[color:var(--line)] bg-[color:var(--parchment)] rounded-xl"
                   style={{ height: "40px" }}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono uppercase tracking-wider text-[color:var(--ink-soft)] mb-1">
+                  Deskripsi Kegiatan Singkat
+                </label>
+                <textarea
+                  placeholder="Masukkan keterangan atau cerita singkat mengenai foto/kegiatan ini..."
+                  value={desc}
+                  onChange={(e) => setDesc(e.target.value)}
+                  rows={4}
+                  className="w-full px-3 py-2 border border-[color:var(--line)] bg-[color:var(--parchment)] rounded-xl text-sm font-sans outline-none focus:border-[color:var(--forest)] resize-none leading-relaxed"
                 />
               </div>
 
@@ -191,9 +207,7 @@ export default function GaleriClientPage({ initialGallery }: Props) {
                     <circle cx="11" cy="11" r="7" />
                     <line x1="21" y1="21" x2="16.65" y2="16.65" />
                   </svg>
-                  <span className="text-center font-heading text-shadow z-10 text-white font-semibold">
-                    {label || "Label Preview"}
-                  </span>
+                  <span className="z-10 text-center select-none">{label || "Judul Foto Tampil di Sini"}</span>
                 </div>
               </div>
 
@@ -212,12 +226,7 @@ export default function GaleriClientPage({ initialGallery }: Props) {
               <Button
                 type="submit"
                 disabled={loading}
-                className="btn btn-primary w-full border-none text-white font-medium"
-                style={{
-                  height: "40px",
-                  background: "var(--forest)",
-                  borderRadius: "20px"
-                }}
+                className="w-full h-10 rounded-full border-none text-white font-medium bg-[color:var(--forest)]"
               >
                 {loading ? "Mengunggah..." : "Simpan Item"}
               </Button>
@@ -237,7 +246,7 @@ export default function GaleriClientPage({ initialGallery }: Props) {
                 Belum ada foto galeri yang ditambahkan.
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[600px] overflow-y-auto pr-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[700px] overflow-y-auto pr-1">
                 {gallery.map((item, idx) => (
                   <div
                     key={idx}
@@ -245,35 +254,45 @@ export default function GaleriClientPage({ initialGallery }: Props) {
                   >
                     {/* Cover block */}
                     <div
-                      className="h-24 flex items-center justify-center p-3 relative"
+                      className="h-28 flex items-center justify-center p-3 relative"
                       style={
                         item.image
                           ? { backgroundImage: `url(${item.image})`, backgroundSize: "cover", backgroundPosition: "center" }
                           : { background: item.grad }
                       }
                     >
-                      <div className="absolute inset-0 bg-black/25 z-0" />
-                      <span className="text-white text-xs font-semibold text-center text-shadow z-10">
+                      <div className="absolute inset-0 bg-black/30 z-0" />
+                      <span className="text-white text-xs font-semibold text-center z-10 leading-snug">
                         {item.label}
                       </span>
                     </div>
 
                     {/* Metadata & Actions */}
-                    <div className="p-3 flex items-center justify-between bg-white border-t border-[color:var(--line)]">
-                      <span className="text-[11px] font-mono text-[color:var(--ink-soft)] uppercase tracking-wider">
-                        {item.cat}
-                      </span>
+                    <div className="p-3 flex flex-col gap-2 bg-white border-t border-[color:var(--line)]">
+                      {item.desc ? (
+                        <p className="text-xs text-[color:var(--ink-soft)] line-clamp-2 leading-relaxed">
+                          {item.desc}
+                        </p>
+                      ) : (
+                        <p className="text-xs text-gray-400 italic">Tidak ada deskripsi</p>
+                      )}
+                      
+                      <div className="flex items-center justify-between border-t border-gray-100 pt-2 mt-1">
+                        <span className="text-[10px] font-mono text-[color:var(--ink-soft)] uppercase tracking-wider bg-[color:var(--parchment)] border border-[color:var(--line)] px-2 py-0.5 rounded-full">
+                          {item.cat}
+                        </span>
 
-                      <button
-                        onClick={() => handleDelete(item.label)}
-                        className="p-1.5 hover:bg-[color:var(--clay)]/10 text-[color:var(--clay)] rounded-lg transition-colors border-none bg-transparent cursor-pointer"
-                        title="Hapus galeri"
-                      >
-                        <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" width="14" height="14">
-                          <polyline points="3 6 5 6 21 6" />
-                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                        </svg>
-                      </button>
+                        <button
+                          onClick={() => handleDelete(item.label)}
+                          className="p-1.5 hover:bg-[color:var(--clay)]/10 text-[color:var(--clay)] rounded-lg transition-colors border-none bg-transparent cursor-pointer"
+                          title="Hapus galeri"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" stroke="currentColor" width="14" height="14">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}

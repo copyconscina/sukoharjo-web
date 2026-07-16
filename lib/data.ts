@@ -20,13 +20,16 @@ export interface Berita {
   title: string
   desc: string
   date: string
+  images?: string
 }
 
 export interface GaleriItem {
+  id?: number
   label: string
   cat: string
   grad: string
   image?: string
+  desc?: string
 }
 
 export interface Potensi {
