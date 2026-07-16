@@ -302,6 +302,9 @@ p {
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
+    width: 100vw !important;
+    height: calc(100vh - 66px) !important;
+    height: calc(100dvh - 66px) !important;
     flex-direction: column !important;
     background-color: #fbfaf5 !important;
     background: #fbfaf5 !important;
