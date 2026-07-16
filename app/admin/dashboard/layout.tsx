@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { checkAuthAction } from "../actions";
+import { checkAuth } from "@/lib/auth";
 import AdminSidebar from "@/components/AdminSidebar";
 
 export const dynamic = "force-dynamic";
@@ -9,7 +9,7 @@ export default async function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isAuth = await checkAuthAction();
+  const isAuth = await checkAuth();
 
   if (!isAuth) {
     redirect("/admin/login");
