@@ -94,7 +94,7 @@ export async function getBeritaList(): Promise<Berita[]> {
 
   return data.map((b) => ({
     id: b.id,
-    tag: b.tag,
+    tag: b.tag ? b.tag.charAt(0).toUpperCase() + b.tag.slice(1) : "",
     cls: b.cls || "",
     title: b.title,
     desc: b.desc || "",
@@ -121,7 +121,7 @@ export async function getBeritaById(id: number): Promise<Berita | undefined> {
 
   return {
     id: data.id,
-    tag: data.tag,
+    tag: data.tag ? data.tag.charAt(0).toUpperCase() + data.tag.slice(1) : "",
     cls: data.cls || "",
     title: data.title,
     desc: data.desc || "",
@@ -138,7 +138,7 @@ export async function addBerita(item: Omit<Berita, "date"> & { date?: string }):
   const { data, error } = await supabaseServer
     .from("berita")
     .insert({
-      tag: item.tag,
+      tag: item.tag.toLowerCase(),
       cls: item.cls || "",
       title: item.title,
       desc: item.desc,
@@ -152,7 +152,7 @@ export async function addBerita(item: Omit<Berita, "date"> & { date?: string }):
   
   return {
     id: data.id,
-    tag: data.tag,
+    tag: data.tag ? data.tag.charAt(0).toUpperCase() + data.tag.slice(1) : "",
     cls: data.cls || "",
     title: data.title,
     desc: data.desc || "",
@@ -177,6 +177,20 @@ export async function deleteBerita(title: string): Promise<boolean> {
   }
   return true;
 }
+
+export async function deleteBeritaById(id: number): Promise<boolean> {
+  const { error } = await supabaseServer
+    .from("berita")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error(`Error deleting Berita with id ${id}:`, error);
+    return false;
+  }
+  return true;
+}
+
 
 // Galeri DB Operations
 export async function getGaleriList(): Promise<GaleriItem[]> {

@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
@@ -13,12 +12,14 @@ import {
   deleteUmkm,
 } from "@/lib/db";
 import { Umkm, Berita, GaleriItem } from "@/lib/data";
-import { supabaseServer } from "@/lib/supabase-server";
-
-const ADMIN_USER = "admin";
-const ADMIN_PASS = "desaSukoharjo2026";
-const SESSION_COOKIE = "admin_session";
-const SESSION_TOKEN = "desasukoharjo_authenticated_token_2026";
+import {
+  ADMIN_USER,
+  ADMIN_PASS,
+  checkAuth,
+  setAuthSession,
+  clearAuthSession,
+} from "@/lib/auth";
+import { uploadSingleFile, uploadMultipleFiles } from "@/lib/upload";
 
 // Auth Actions
 export async function loginAction(formData: FormData) {
@@ -26,14 +27,7 @@ export async function loginAction(formData: FormData) {
   const password = formData.get("password") as string;
 
   if (username === ADMIN_USER && password === ADMIN_PASS) {
-    const cookieStore = await cookies();
-    cookieStore.set(SESSION_COOKIE, SESSION_TOKEN, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24, // 1 day
-      path: "/",
-      sameSite: "lax",
-    });
+    await setAuthSession();
     return { success: true };
   }
 
@@ -41,25 +35,18 @@ export async function loginAction(formData: FormData) {
 }
 
 export async function logoutAction() {
-  const cookieStore = await cookies();
-  cookieStore.delete(SESSION_COOKIE);
+  await clearAuthSession();
   redirect("/admin/login");
 }
 
 export async function checkAuthAction(): Promise<boolean> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
-  return token === SESSION_TOKEN;
+  return checkAuth();
 }
 
 // Berita Actions
 export async function addBeritaAction(tag: string, title: string, desc: string, images?: string) {
   const isAuth = await checkAuthAction();
   if (!isAuth) throw new Error("Unauthorized");
-
-  // Format date to: "DD MMM YYYY" (e.g. "15 Jul 2026")
-  const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "short", year: "numeric" };
-  const formattedDate = new Date().toLocaleDateString("id-ID", options);
 
   const newBerita: Omit<Berita, "date"> & { date?: string } = {
     tag,
@@ -162,45 +149,12 @@ export async function uploadImageAction(formData: FormData) {
   if (!isAuth) throw new Error("Unauthorized");
 
   const file = formData.get("file") as File;
-  if (!file || file.size === 0) {
-    return { success: false, error: "Tidak ada file yang diunggah." };
-  }
-
-  // Basic validation (only images)
-  if (!file.type.startsWith("image/")) {
-    return { success: false, error: "File harus berupa gambar (JPG, PNG, WebP, dll)." };
-  }
-
   try {
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Create unique filename
-    const fileExtension = file.name.split(".").pop();
-    const uniqueFilename = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExtension}`;
-
-    // Upload to Supabase Storage bucket 'sukoharjo-assets'
-    const { data: uploadData, error: uploadError } = await supabaseServer.storage
-      .from("sukoharjo-assets")
-      .upload(uniqueFilename, buffer, {
-        contentType: file.type,
-        duplex: "half", // standard option for node streams
-      } as any);
-
-    if (uploadError) {
-      console.error("Supabase Storage upload error:", uploadError);
-      return { success: false, error: `Gagal mengunggah foto ke storage: ${uploadError.message}` };
-    }
-
-    // Get the public URL of the uploaded image
-    const { data: publicUrlData } = supabaseServer.storage
-      .from("sukoharjo-assets")
-      .getPublicUrl(uniqueFilename);
-
-    return { success: true, url: publicUrlData.publicUrl };
-  } catch (err) {
-    console.error("Failed to upload image to Supabase Storage:", err);
-    return { success: false, error: "Gagal menyimpan gambar di cloud storage." };
+    const url = await uploadSingleFile(file);
+    return { success: true, url };
+  } catch (err: any) {
+    console.error("Failed to upload image:", err);
+    return { success: false, error: err.message || "Gagal mengunggah foto." };
   }
 }
 
@@ -209,44 +163,11 @@ export async function uploadMultipleImagesAction(formData: FormData) {
   if (!isAuth) throw new Error("Unauthorized");
 
   const files = formData.getAll("files") as File[];
-  if (!files || files.length === 0) {
-    return { success: false, error: "Tidak ada file yang diunggah." };
-  }
-
-  const urls: string[] = [];
   try {
-    for (const file of files) {
-      if (file.size === 0) continue;
-      if (!file.type.startsWith("image/")) {
-        return { success: false, error: "Semua file harus berupa gambar (JPG, PNG, WebP, dll)." };
-      }
-
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-
-      const fileExtension = file.name.split(".").pop();
-      const uniqueFilename = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExtension}`;
-
-      const { error: uploadError } = await supabaseServer.storage
-        .from("sukoharjo-assets")
-        .upload(uniqueFilename, buffer, {
-          contentType: file.type,
-          duplex: "half",
-        } as any);
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      const { data: publicUrlData } = supabaseServer.storage
-        .from("sukoharjo-assets")
-        .getPublicUrl(uniqueFilename);
-
-      urls.push(publicUrlData.publicUrl);
-    }
+    const urls = await uploadMultipleFiles(files);
     return { success: true, urls };
-  } catch (err) {
+  } catch (err: any) {
     console.error("Failed to upload images:", err);
-    return { success: false, error: "Gagal mengunggah satu atau beberapa gambar ke storage." };
+    return { success: false, error: err.message || "Gagal mengunggah satu atau beberapa gambar." };
   }
 }
