@@ -138,34 +138,45 @@ export default async function UmkmDetailPage({ params }: Props) {
             <h3 style={{ borderBottom: "1px solid var(--line)", paddingBottom: "12px", marginBottom: "16px" }}>
               Informasi Usaha
             </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-              <div className="detail-row">
-                {icTag}
+            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+              <div className="detail-row" style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                <div style={{ color: "var(--forest)", marginTop: "2px", flexShrink: 0 }}>
+                  {icTag}
+                </div>
                 <div>
-                  <div className="lbl">Produk Unggulan</div>
-                  <div className="val" style={{ fontWeight: "600" }}>{u.product}</div>
+                  <div className="lbl" style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: "var(--font-mono)", color: "var(--ink-soft)", marginBottom: "2px" }}>Produk Unggulan</div>
+                  <div className="val" style={{ fontSize: "14.5px", color: "var(--ink)", fontWeight: "600" }}>{u.product}</div>
                 </div>
               </div>
-              <div className="detail-row">
-                {icPin}
+
+              <div className="detail-row" style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                <div style={{ color: "var(--forest)", marginTop: "2px", flexShrink: 0 }}>
+                  {icPin}
+                </div>
                 <div>
-                  <div className="lbl">Alamat</div>
-                  <div className="val">{u.address}</div>
+                  <div className="lbl" style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: "var(--font-mono)", color: "var(--ink-soft)", marginBottom: "2px" }}>Alamat</div>
+                  <div className="val" style={{ fontSize: "14.5px", color: "var(--ink)", lineHeight: "1.5" }}>{u.address}</div>
                 </div>
               </div>
-              <div className="detail-row">
-                {icCal}
+
+              <div className="detail-row" style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                <div style={{ color: "var(--forest)", marginTop: "2px", flexShrink: 0 }}>
+                  {icCal}
+                </div>
                 <div>
-                  <div className="lbl">Tahun Berdiri</div>
-                  <div className="val">{u.year}</div>
+                  <div className="lbl" style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: "var(--font-mono)", color: "var(--ink-soft)", marginBottom: "2px" }}>Tahun Berdiri</div>
+                  <div className="val" style={{ fontSize: "14.5px", color: "var(--ink)" }}>{u.year}</div>
                 </div>
               </div>
+
               {u.social ? (
-                <div className="detail-row">
-                  {icShare}
+                <div className="detail-row" style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                  <div style={{ color: "var(--forest)", marginTop: "2px", flexShrink: 0 }}>
+                    {icShare}
+                  </div>
                   <div>
-                    <div className="lbl">Media Sosial</div>
-                    <div className="val">{u.social}</div>
+                    <div className="lbl" style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: "var(--font-mono)", color: "var(--ink-soft)", marginBottom: "2px" }}>Media Sosial</div>
+                    <div className="val" style={{ fontSize: "14.5px", color: "var(--ink)" }}>{u.social}</div>
                   </div>
                 </div>
               ) : null}
