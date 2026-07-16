@@ -229,35 +229,37 @@ export default function ImageCropperModal({
 
         {/* Modal Content / Preview Area */}
         <div className="p-6 flex-1 overflow-y-auto flex flex-col gap-4">
-          <div 
-            ref={containerRef}
-            className="relative overflow-hidden bg-black/5 border border-[color:var(--line)] rounded-xl cursor-move select-none touch-none flex items-center justify-center min-h-[220px]"
-            onMouseDown={handleDragStart}
-            onTouchStart={handleTouchStart}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src={imageUrl} 
-              alt="Crop preview source" 
-              className="w-full h-auto max-h-[350px] object-contain block pointer-events-none"
-            />
-            {/* Dark semi-transparent overlay with clear cutout */}
+          <div className="flex items-center justify-center bg-black/5 rounded-xl border border-[color:var(--line)] min-h-[220px] p-4">
             <div 
-              style={{
-                position: "absolute",
-                left: `${cropX}%`,
-                top: `${cropY}%`,
-                width: `${cropWidth}%`,
-                height: `${cropHeight}%`,
-                border: "2px dashed #ffffff",
-                boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.5)",
-                pointerEvents: "none",
-              }}
+              ref={containerRef}
+              className="relative overflow-hidden cursor-move select-none touch-none w-fit h-fit"
+              onMouseDown={handleDragStart}
+              onTouchStart={handleTouchStart}
             >
-              {/* Center crosshair */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-30">
-                <div className="w-4 h-[1px] bg-white" />
-                <div className="h-4 w-[1px] bg-white absolute" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src={imageUrl} 
+                alt="Crop preview source" 
+                className="max-w-full h-auto max-h-[300px] block pointer-events-none rounded-lg"
+              />
+              {/* Dark semi-transparent overlay with clear cutout */}
+              <div 
+                style={{
+                  position: "absolute",
+                  left: `${cropX}%`,
+                  top: `${cropY}%`,
+                  width: `${cropWidth}%`,
+                  height: `${cropHeight}%`,
+                  border: "2px dashed #ffffff",
+                  boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.5)",
+                  pointerEvents: "none",
+                }}
+              >
+                {/* Center crosshair */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-30">
+                  <div className="w-4 h-[1px] bg-white" />
+                  <div className="h-4 w-[1px] bg-white absolute" />
+                </div>
               </div>
             </div>
           </div>
