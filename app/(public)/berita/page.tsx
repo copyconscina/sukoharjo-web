@@ -10,8 +10,8 @@ export const metadata: Metadata = {
   description: "Kegiatan, agenda, dan pengumuman resmi dari Pemerintah Desa Sukoharjo, Kecamatan Tirtomoyo, Kabupaten Wonogiri.",
 };
 
-export default function BeritaPage() {
-  const beritaData = getBeritaList();
+export default async function BeritaPage() {
+  const beritaData = await getBeritaList();
   return (
     <div className="font-sans">
       {/* PAGE HEADER */}

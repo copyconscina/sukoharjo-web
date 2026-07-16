@@ -3,8 +3,6 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import fs from "fs";
-import path from "path";
 import {
   addBerita,
   deleteBerita,
@@ -15,6 +13,7 @@ import {
   deleteUmkm,
 } from "@/lib/db";
 import { Umkm, Berita, GaleriItem } from "@/lib/data";
+import { supabaseServer } from "@/lib/supabase-server";
 
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "desaSukoharjo2026";
@@ -62,15 +61,14 @@ export async function addBeritaAction(tag: string, title: string, desc: string) 
   const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "short", year: "numeric" };
   const formattedDate = new Date().toLocaleDateString("id-ID", options);
 
-  const newBerita: Berita = {
+  const newBerita: Omit<Berita, "date"> & { date?: string } = {
     tag,
     cls: tag.toLowerCase() === "pengumuman" ? "pengumuman" : "",
     title,
     desc,
-    date: formattedDate,
   };
 
-  addBerita(newBerita);
+  await addBerita(newBerita);
   
   revalidatePath("/");
   revalidatePath("/berita");
@@ -81,7 +79,7 @@ export async function deleteBeritaAction(title: string) {
   const isAuth = await checkAuthAction();
   if (!isAuth) throw new Error("Unauthorized");
 
-  deleteBerita(title);
+  await deleteBerita(title);
 
   revalidatePath("/");
   revalidatePath("/berita");
@@ -100,7 +98,7 @@ export async function addGaleriAction(label: string, cat: string, grad: string, 
     image,
   };
 
-  addGaleri(newItem);
+  await addGaleri(newItem);
 
   revalidatePath("/");
   revalidatePath("/galeri");
@@ -111,7 +109,7 @@ export async function deleteGaleriAction(label: string) {
   const isAuth = await checkAuthAction();
   if (!isAuth) throw new Error("Unauthorized");
 
-  deleteGaleri(label);
+  await deleteGaleri(label);
 
   revalidatePath("/");
   revalidatePath("/galeri");
@@ -123,7 +121,7 @@ export async function updatePotensiAction(num: string, title: string, desc: stri
   const isAuth = await checkAuthAction();
   if (!isAuth) throw new Error("Unauthorized");
 
-  updatePotensi(num, title, desc);
+  await updatePotensi(num, title, desc);
 
   revalidatePath("/");
   revalidatePath("/potensi");
@@ -135,7 +133,7 @@ export async function saveUmkmAction(itemData: Omit<Umkm, "id"> & { id?: number 
   const isAuth = await checkAuthAction();
   if (!isAuth) throw new Error("Unauthorized");
 
-  const saved = saveUmkm(itemData);
+  const saved = await saveUmkm(itemData);
 
   revalidatePath("/");
   revalidatePath("/umkm");
@@ -149,7 +147,7 @@ export async function deleteUmkmAction(id: number) {
   const isAuth = await checkAuthAction();
   if (!isAuth) throw new Error("Unauthorized");
 
-  deleteUmkm(id);
+  await deleteUmkm(id);
 
   revalidatePath("/");
   revalidatePath("/umkm");
@@ -179,15 +177,27 @@ export async function uploadImageAction(formData: FormData) {
     const fileExtension = file.name.split(".").pop();
     const uniqueFilename = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExtension}`;
 
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+    // Upload to Supabase Storage bucket 'sukoharjo-assets'
+    const { data: uploadData, error: uploadError } = await supabaseServer.storage
+      .from("sukoharjo-assets")
+      .upload(uniqueFilename, buffer, {
+        contentType: file.type,
+        duplex: "half", // standard option for node streams
+      } as any);
+
+    if (uploadError) {
+      console.error("Supabase Storage upload error:", uploadError);
+      return { success: false, error: `Gagal mengunggah foto ke storage: ${uploadError.message}` };
     }
 
-    fs.writeFileSync(path.join(uploadDir, uniqueFilename), buffer);
-    return { success: true, url: `/uploads/${uniqueFilename}` };
+    // Get the public URL of the uploaded image
+    const { data: publicUrlData } = supabaseServer.storage
+      .from("sukoharjo-assets")
+      .getPublicUrl(uniqueFilename);
+
+    return { success: true, url: publicUrlData.publicUrl };
   } catch (err) {
-    console.error("Failed to upload image:", err);
-    return { success: false, error: "Gagal menyimpan gambar di server." };
+    console.error("Failed to upload image to Supabase Storage:", err);
+    return { success: false, error: "Gagal menyimpan gambar di cloud storage." };
   }
 }

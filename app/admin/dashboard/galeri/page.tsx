@@ -3,8 +3,8 @@ import GaleriClientPage from "./GaleriClientPage";
 
 export const dynamic = "force-dynamic";
 
-export default function GaleriPage() {
-  const galleryList = getGaleriList();
+export default async function GaleriPage() {
+  const galleryList = await getGaleriList();
 
   return <GaleriClientPage initialGallery={galleryList} />;
 }

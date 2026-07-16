@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   description: "Kekayaan alam, pertanian, kerajinan, peternakan, dan peluang pengembangan Desa Sukoharjo, Kecamatan Tirtomoyo, Kabupaten Wonogiri.",
 };
 
-export default function PotensiPage() {
-  const potensiData = getPotensiList();
+export default async function PotensiPage() {
+  const potensiData = await getPotensiList();
   return (
     <div className="font-sans">
       <div className="page-header">

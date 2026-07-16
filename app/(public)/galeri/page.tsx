@@ -9,8 +9,8 @@ export const metadata: Metadata = {
   description: "Dokumentasi foto kegiatan warga, database UMKM, dan potensi Desa Sukoharjo, Kecamatan Tirtomoyo, Kabupaten Wonogiri.",
 };
 
-export default function GaleriPage() {
-  const galeriData = getGaleriList();
+export default async function GaleriPage() {
+  const galeriData = await getGaleriList();
 
   return (
     <div className="font-sans">

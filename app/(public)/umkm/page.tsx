@@ -9,8 +9,8 @@ export const metadata: Metadata = {
   description: "Daftar unit usaha mikro, kecil, dan menengah (UMKM) unggulan Desa Sukoharjo, Kecamatan Tirtomoyo, Kabupaten Wonogiri.",
 };
 
-export default function UmkmPage() {
-  const umkmData = getUmkmList();
+export default async function UmkmPage() {
+  const umkmData = await getUmkmList();
 
   return (
     <div className="font-sans">

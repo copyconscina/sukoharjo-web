@@ -3,8 +3,8 @@ import PotensiClientPage from "./PotensiClientPage";
 
 export const dynamic = "force-dynamic";
 
-export default function PotensiPage() {
-  const potentials = getPotensiList();
+export default async function PotensiPage() {
+  const potentials = await getPotensiList();
 
   return <PotensiClientPage initialPotentials={potentials} />;
 }

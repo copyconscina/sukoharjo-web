@@ -4,11 +4,16 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export default function DashboardPage() {
-  const newsCount = getBeritaList().length;
-  const galleryCount = getGaleriList().length;
-  const umkmCount = getUmkmList().length;
-  const potentialsCount = getPotensiList().length;
+export default async function DashboardPage() {
+  const newsList = await getBeritaList();
+  const galleryList = await getGaleriList();
+  const umkmList = await getUmkmList();
+  const potentialsList = await getPotensiList();
+
+  const newsCount = newsList.length;
+  const galleryCount = galleryList.length;
+  const umkmCount = umkmList.length;
+  const potentialsCount = potentialsList.length;
 
   const stats = [
     {

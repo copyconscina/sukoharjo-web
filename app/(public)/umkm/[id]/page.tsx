@@ -13,7 +13,7 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const umkmData = getUmkmList();
+  const umkmData = await getUmkmList();
   return umkmData.map((u) => ({
     id: u.id.toString(),
   }));
@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const u = getUmkmById(parseInt(id));
+  const u = await getUmkmById(parseInt(id));
   if (!u) {
     return {
       title: "UMKM Tidak Ditemukan",
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function UmkmDetailPage({ params }: Props) {
   const { id } = await params;
-  const u = getUmkmById(parseInt(id));
+  const u = await getUmkmById(parseInt(id));
 
   if (!u) {
     notFound();

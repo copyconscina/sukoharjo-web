@@ -3,8 +3,8 @@ import BeritaClientPage from "./BeritaClientPage";
 
 export const dynamic = "force-dynamic";
 
-export default function BeritaPage() {
-  const newsList = getBeritaList();
+export default async function BeritaPage() {
+  const newsList = await getBeritaList();
 
   return <BeritaClientPage initialNews={newsList} />;
 }

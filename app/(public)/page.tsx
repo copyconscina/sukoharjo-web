@@ -13,11 +13,11 @@ export const metadata: Metadata = {
   description: "Website Resmi Pemerintah Desa Sukoharjo, Kecamatan Tirtomoyo, Kabupaten Wonogiri — media informasi desa dan etalase digital UMKM warga.",
 };
 
-export default function Home() {
-  const umkmData = getUmkmList();
-  const beritaData = getBeritaList();
-  const galeriData = getGaleriList();
-  const potensiData = getPotensiList();
+export default async function Home() {
+  const umkmData = await getUmkmList();
+  const beritaData = await getBeritaList();
+  const galeriData = await getGaleriList();
+  const potensiData = await getPotensiList();
   return (
     <div className="font-sans">
       {/* HERO SECTION */}
