@@ -168,14 +168,16 @@ export default async function Home() {
           </div>
           <div className="grid cols-3" style={{ marginTop: "24px" }}>
             {beritaData.slice(0, 3).map((b, idx) => (
-              <Card key={idx} className="card info-card shadow-none border border-[color:var(--line)]">
-                <Badge className={`tag ${b.cls} border-none w-fit inline-flex justify-center`} variant="default" style={{ height: "auto" }}>
-                  {b.tag}
-                </Badge>
-                <h3 className="font-heading" style={{ marginTop: "14px" }}>{b.title}</h3>
-                <p style={{ marginTop: "6px" }}>{b.desc}</p>
-                <div className="date">{b.date}</div>
-              </Card>
+              <Link href={`/berita/${b.id}`} target="_blank" key={idx} style={{ textDecoration: "none", color: "inherit" }} className="h-full block">
+                <Card className="card info-card shadow-none border border-[color:var(--line)] transition-transform hover:-translate-y-1 hover:shadow-sm duration-200 cursor-pointer h-full">
+                  <Badge className={`tag ${b.cls} border-none w-fit inline-flex justify-center`} variant="default" style={{ height: "auto" }}>
+                    {b.tag}
+                  </Badge>
+                  <h3 className="font-heading" style={{ marginTop: "14px" }}>{b.title}</h3>
+                  <p style={{ marginTop: "6px" }}>{b.desc}</p>
+                  <div className="date">{b.date}</div>
+                </Card>
+              </Link>
             ))}
           </div>
           <div style={{ marginTop: "32px", textAlign: "center" }}>

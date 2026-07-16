@@ -63,7 +63,7 @@ export async function addBeritaAction(tag: string, title: string, desc: string) 
 
   const newBerita: Omit<Berita, "date"> & { date?: string } = {
     tag,
-    cls: tag.toLowerCase() === "pengumuman" ? "pengumuman" : "",
+    cls: tag.toLowerCase() === "pengumuman" ? "pengumuman" : tag.toLowerCase() === "pembangunan" ? "pembangunan" : "",
     title,
     desc,
   };

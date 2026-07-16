@@ -557,6 +557,9 @@ section.block.tight {
 .info-card .tag.pengumuman {
   background: var(--clay);
 }
+.info-card .tag.pembangunan {
+  background: var(--padi);
+}
 .info-card .date {
   font-family: var(--font-mono);
   font-size: 12px;

@@ -115,6 +115,7 @@ export default function BeritaClientPage({ initialNews }: Props) {
                   <option value="Kegiatan">Kegiatan</option>
                   <option value="Pengumuman">Pengumuman</option>
                   <option value="Agenda">Agenda</option>
+                  <option value="Pembangunan">Pembangunan</option>
                 </select>
               </div>
 

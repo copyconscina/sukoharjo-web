@@ -93,6 +93,7 @@ export async function getBeritaList(): Promise<Berita[]> {
   }
 
   return data.map((b) => ({
+    id: b.id,
     tag: b.tag,
     cls: b.cls || "",
     title: b.title,
@@ -103,6 +104,32 @@ export async function getBeritaList(): Promise<Berita[]> {
       year: "numeric",
     }),
   })) as Berita[];
+}
+
+export async function getBeritaById(id: number): Promise<Berita | undefined> {
+  const { data, error } = await supabase
+    .from("berita")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error(`Error fetching Berita with id ${id}:`, error);
+    return undefined;
+  }
+
+  return {
+    id: data.id,
+    tag: data.tag,
+    cls: data.cls || "",
+    title: data.title,
+    desc: data.desc || "",
+    date: new Date(data.published_at).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }),
+  } as Berita;
 }
 
 export async function addBerita(item: Omit<Berita, "date"> & { date?: string }): Promise<Berita> {
@@ -121,6 +148,7 @@ export async function addBerita(item: Omit<Berita, "date"> & { date?: string }):
   if (error) throw error;
   
   return {
+    id: data.id,
     tag: data.tag,
     cls: data.cls || "",
     title: data.title,

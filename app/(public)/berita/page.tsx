@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { getBeritaList } from "@/lib/db";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -33,14 +34,16 @@ export default async function BeritaPage() {
         <div className="wrap">
           <div className="grid cols-3">
             {beritaData.map((b, idx) => (
-              <Card key={idx} className="card info-card shadow-none border border-[color:var(--line)]">
-                <Badge className={`tag ${b.cls} border-none w-fit inline-flex justify-center`} variant="default" style={{ height: "auto" }}>
-                  {b.tag}
-                </Badge>
-                <h3 className="font-heading" style={{ marginTop: "14px" }}>{b.title}</h3>
-                <p style={{ marginTop: "6px" }}>{b.desc}</p>
-                <div className="date">{b.date}</div>
-              </Card>
+              <Link href={`/berita/${b.id}`} target="_blank" key={idx} style={{ textDecoration: "none", color: "inherit" }} className="h-full block">
+                <Card className="card info-card shadow-none border border-[color:var(--line)] transition-transform hover:-translate-y-1 hover:shadow-sm duration-200 cursor-pointer h-full">
+                  <Badge className={`tag ${b.cls} border-none w-fit inline-flex justify-center`} variant="default" style={{ height: "auto" }}>
+                    {b.tag}
+                  </Badge>
+                  <h3 className="font-heading" style={{ marginTop: "14px" }}>{b.title}</h3>
+                  <p style={{ marginTop: "6px" }}>{b.desc}</p>
+                  <div className="date">{b.date}</div>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>

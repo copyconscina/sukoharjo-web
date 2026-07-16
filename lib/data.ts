@@ -14,6 +14,7 @@ export interface Umkm {
 }
 
 export interface Berita {
+  id?: number
   tag: string
   cls: string
   title: string
