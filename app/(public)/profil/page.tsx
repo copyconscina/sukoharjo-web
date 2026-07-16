@@ -212,27 +212,17 @@ export default function ProfilPage() {
                 </div>
               </div>
             </div>
-            <Card className="map-box border-none shadow-none text-white">
-              <svg className="pin" viewBox="0 0 24 24" fill="none" stroke="#eec96e" strokeWidth="1.6">
-                <path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <div>
-                <h3 style={{ color: "#fff" }}>Kantor Desa Sukoharjo</h3>
-                <p style={{ color: "#cfd3bd", fontSize: "14px", marginTop: "6px" }}>
-                  Tirtomoyo, Wonogiri, Jawa Tengah
-                </p>
-              </div>
-              <Button asChild className="btn btn-primary border-none">
-                <a
-                  href="https://www.google.com/maps/search/?api=1&query=Desa+Sukoharjo+Tirtomoyo+Wonogiri"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Buka di Google Maps
-                </a>
-              </Button>
-            </Card>
+            <div style={{ height: "100%", minHeight: "340px", borderRadius: "var(--radius)", overflow: "hidden", border: "1px solid var(--line)", boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
+              <iframe
+                src="https://maps.google.com/maps?q=Kantor%20Kepala%20Desa%20Sukoharjo%20Tirtomoyo%20Wonogiri&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0, minHeight: "340px" }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
           </div>
         </div>
       </section>
