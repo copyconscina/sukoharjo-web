@@ -168,18 +168,36 @@ export default async function Home() {
             <h2 style={{ marginTop: "10px" }}>Kabar dari Balai Desa</h2>
           </div>
           <div className="grid cols-3" style={{ marginTop: "24px" }}>
-            {beritaData.slice(0, 3).map((b, idx) => (
-              <Link href={`/berita/${b.id}`} target="_blank" key={idx} style={{ textDecoration: "none", color: "inherit" }} className="h-full block">
-                <Card className="card info-card shadow-none border border-[color:var(--line)] transition-transform hover:-translate-y-1 hover:shadow-sm duration-200 cursor-pointer h-full">
-                  <Badge className={`tag ${b.cls} border-none w-fit inline-flex justify-center`} variant="default" style={{ height: "auto" }}>
-                    {b.tag}
-                  </Badge>
-                  <h3 className="font-heading" style={{ marginTop: "14px" }}>{b.title}</h3>
-                  <p style={{ marginTop: "6px" }}>{b.desc}</p>
-                  <div className="date">{b.date}</div>
-                </Card>
-              </Link>
-            ))}
+            {beritaData.slice(0, 3).map((b, idx) => {
+              const firstImage = b.images ? b.images.split(",")[0] : null;
+              return (
+                <Link href={`/berita/${b.id}`} target="_blank" key={idx} style={{ textDecoration: "none", color: "inherit" }} className="h-full block">
+                  <Card 
+                    className="card info-card shadow-none border border-[color:var(--line)] transition-transform hover:-translate-y-1 hover:shadow-sm duration-200 cursor-pointer h-full flex flex-col justify-between overflow-hidden"
+                    style={{ padding: 0 }}
+                  >
+                    {firstImage && (
+                      <div className="w-full h-44 overflow-hidden border-b border-[color:var(--line)] relative bg-black/5">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={firstImage} alt={b.title} className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "10px", flex: 1, justifyContent: "space-between" }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                        <Badge className={`tag ${b.cls} border-none w-fit inline-flex justify-center`} variant="default" style={{ height: "auto", margin: 0 }}>
+                          {b.tag}
+                        </Badge>
+                        <h3 className="font-heading" style={{ margin: 0, fontSize: "1.15rem", lineHeight: "1.35", color: "var(--ink)" }}>{b.title}</h3>
+                        <p style={{ margin: 0, color: "var(--ink-soft)", fontSize: "14px", lineHeight: "1.5" }} className="line-clamp-3">{b.desc}</p>
+                      </div>
+                      <div className="date" style={{ marginTop: "12px", borderTop: "1px solid var(--line)", paddingTop: "12px", fontSize: "12px", fontFamily: "var(--font-mono)", color: "var(--ink-soft)" }}>
+                        {b.date}
+                      </div>
+                    </div>
+                  </Card>
+                </Link>
+              );
+            })}
           </div>
           <div style={{ marginTop: "32px", textAlign: "center" }}>
             <Button asChild className="btn btn-dark border-none">
