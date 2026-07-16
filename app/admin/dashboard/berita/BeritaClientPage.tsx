@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Berita } from "@/lib/data";
-import { addBeritaAction, deleteBeritaAction, uploadImageAction } from "@/app/admin/actions";
+import { addBeritaApi, deleteBeritaApi } from "@/lib/beritaApi";
+import { uploadImageAction } from "@/app/admin/actions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,17 +61,13 @@ export default function BeritaClientPage({ initialNews }: Props) {
       }
 
       // 2. Save news article
-      const res = await addBeritaAction(tag, title.trim(), desc.trim(), uploadedUrlsString);
+      const res = await addBeritaApi(tag, title.trim(), desc.trim(), uploadedUrlsString);
       if (res.success) {
-        const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "short", year: "numeric" };
-        const dateStr = new Date().toLocaleDateString("id-ID", options);
-        
+        const dateStr = res.item.date;
         const newArticle: Berita = {
-          tag,
-          cls: tag.toLowerCase() === "pengumuman" ? "pengumuman" : tag.toLowerCase() === "pembangunan" ? "pembangunan" : "",
+          ...res.item,
           title: title.trim(),
           desc: desc.trim(),
-          date: dateStr,
           images: uploadedUrlsString || undefined,
         };
 
@@ -103,7 +100,7 @@ export default function BeritaClientPage({ initialNews }: Props) {
     setSuccess(null);
 
     try {
-      const res = await deleteBeritaAction(targetTitle);
+      const res = await deleteBeritaApi(targetTitle);
       if (res.success) {
         setNews(news.filter((b) => b.title !== targetTitle));
         setSuccess("Berita berhasil dihapus!");
