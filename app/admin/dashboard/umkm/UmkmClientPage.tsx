@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ImageCropperModal from "@/components/ImageCropperModal";
 
 interface Props {
   initialUmkm: Umkm[];
@@ -39,6 +40,8 @@ export default function UmkmClientPage({ initialUmkm }: Props) {
   
   // Image Upload State
   const [file, setFile] = useState<File | null>(null);
+  const [rawFile, setRawFile] = useState<File | null>(null);
+  const [isCropOpen, setIsCropOpen] = useState(false);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | undefined>(undefined);
   const [currentGrad, setCurrentGrad] = useState<string | undefined>(undefined);
 
@@ -385,13 +388,14 @@ export default function UmkmClientPage({ initialUmkm }: Props) {
                 <label className="block text-xs font-mono uppercase tracking-wider text-[color:var(--ink-soft)] mb-2">
                   Upload Foto Cover Usaha {editingId ? "(Opsional)" : ""}
                 </label>
-                <input
+                 <input
                   type="file"
                   id="umkmFileInput"
                   accept="image/*"
                   onChange={(e) => {
                     if (e.target.files && e.target.files[0]) {
-                      setFile(e.target.files[0]);
+                      setRawFile(e.target.files[0]);
+                      setIsCropOpen(true);
                     }
                   }}
                   className="w-full text-xs text-[color:var(--ink-soft)]
@@ -524,6 +528,17 @@ export default function UmkmClientPage({ initialUmkm }: Props) {
           </Card>
         </div>
       </div>
+      {rawFile && (
+        <ImageCropperModal
+          file={rawFile}
+          isOpen={isCropOpen}
+          onClose={() => setIsCropOpen(false)}
+          defaultAspectRatio="1:1"
+          onCrop={(cropped) => {
+            setFile(cropped);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ImageCropperModal from "@/components/ImageCropperModal";
 
 interface Props {
   initialGallery: GaleriItem[];
@@ -30,6 +31,8 @@ export default function GaleriClientPage({ initialGallery }: Props) {
   const [cat, setCat] = useState("Kegiatan");
   const [desc, setDesc] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [rawFile, setRawFile] = useState<File | null>(null);
+  const [isCropOpen, setIsCropOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -184,7 +187,8 @@ export default function GaleriClientPage({ initialGallery }: Props) {
                   accept="image/*"
                   onChange={(e) => {
                     if (e.target.files && e.target.files[0]) {
-                      setFile(e.target.files[0]);
+                      setRawFile(e.target.files[0]);
+                      setIsCropOpen(true);
                     }
                   }}
                   className="w-full text-xs text-[color:var(--ink-soft)]
@@ -310,6 +314,17 @@ export default function GaleriClientPage({ initialGallery }: Props) {
           </Card>
         </div>
       </div>
+      {rawFile && (
+        <ImageCropperModal
+          file={rawFile}
+          isOpen={isCropOpen}
+          onClose={() => setIsCropOpen(false)}
+          defaultAspectRatio="free"
+          onCrop={(cropped) => {
+            setFile(cropped);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Berita } from "@/lib/data";
-import { addBeritaAction, deleteBeritaAction, uploadMultipleImagesAction } from "@/app/admin/actions";
+import { addBeritaAction, deleteBeritaAction, uploadImageAction } from "@/app/admin/actions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ImageCropperModal from "@/components/ImageCropperModal";
 
 interface Props {
   initialNews: Berita[];
@@ -30,7 +31,9 @@ export default function BeritaClientPage({ initialNews }: Props) {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [tag, setTag] = useState("Kegiatan");
-  const [files, setFiles] = useState<FileList | null>(null);
+  const [croppedFiles, setCroppedFiles] = useState<File[]>([]);
+  const [rawFiles, setRawFiles] = useState<File[]>([]);
+  const [currentCropIndex, setCurrentCropIndex] = useState<number>(-1);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,20 +49,22 @@ export default function BeritaClientPage({ initialNews }: Props) {
     try {
       let uploadedUrlsString = "";
 
-      // 1. Upload files if selected
-      if (files && files.length > 0) {
-        const formData = new FormData();
-        Array.from(files).forEach((file) => {
-          formData.append("files", file);
-        });
+      // 1. Upload cropped files sequentially
+      if (croppedFiles.length > 0) {
+        const uploadedUrls: string[] = [];
+        for (const fileToUpload of croppedFiles) {
+          const formData = new FormData();
+          formData.append("file", fileToUpload);
 
-        const uploadRes = await uploadMultipleImagesAction(formData);
-        if (!uploadRes.success || !uploadRes.urls) {
-          setError(uploadRes.error || "Gagal mengunggah foto berita.");
-          setLoading(false);
-          return;
+          const uploadRes = await uploadImageAction(formData);
+          if (!uploadRes.success || !uploadRes.url) {
+            setError(uploadRes.error || "Gagal mengunggah salah satu foto berita.");
+            setLoading(false);
+            return;
+          }
+          uploadedUrls.push(uploadRes.url);
         }
-        uploadedUrlsString = uploadRes.urls.join(",");
+        uploadedUrlsString = uploadedUrls.join(",");
       }
 
       // 2. Save news article
@@ -76,7 +81,8 @@ export default function BeritaClientPage({ initialNews }: Props) {
         setNews([newArticle, ...news]);
         setTitle("");
         setDesc("");
-        setFiles(null);
+        setCroppedFiles([]);
+        setRawFiles([]);
 
         // Reset file input element manually
         const fileInput = document.getElementById("beritaFileInput") as HTMLInputElement;
@@ -112,8 +118,8 @@ export default function BeritaClientPage({ initialNews }: Props) {
     }
   };
 
-  // Convert FileList to preview URLs
-  const previewUrls = files ? Array.from(files).map((f) => URL.createObjectURL(f)) : [];
+  // Convert cropped files to preview URLs
+  const previewUrls = croppedFiles.map((f) => URL.createObjectURL(f));
 
   return (
     <div className="flex flex-col gap-6 font-sans">
@@ -189,7 +195,14 @@ export default function BeritaClientPage({ initialNews }: Props) {
                   id="beritaFileInput"
                   multiple
                   accept="image/*"
-                  onChange={(e) => setFiles(e.target.files)}
+                  onChange={(e) => {
+                    const selected = Array.from(e.target.files || []);
+                    if (selected.length > 0) {
+                      setRawFiles(selected);
+                      setCroppedFiles([]);
+                      setCurrentCropIndex(0);
+                    }
+                  }}
                   className="w-full text-xs text-[color:var(--ink-soft)]
                     file:mr-4 file:py-2 file:px-4
                     file:rounded-full file:border file:border-[color:var(--line)]
@@ -310,6 +323,23 @@ export default function BeritaClientPage({ initialNews }: Props) {
           </Card>
         </div>
       </div>
+      {currentCropIndex >= 0 && currentCropIndex < rawFiles.length && (
+        <ImageCropperModal
+          key={currentCropIndex}
+          file={rawFiles[currentCropIndex]}
+          isOpen={true}
+          onClose={() => setCurrentCropIndex(-1)}
+          defaultAspectRatio="16:9"
+          onCrop={(cropped) => {
+            setCroppedFiles((prev) => [...prev, cropped]);
+            if (currentCropIndex + 1 < rawFiles.length) {
+              setCurrentCropIndex(currentCropIndex + 1);
+            } else {
+              setCurrentCropIndex(-1);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
