@@ -1,4 +1,4 @@
-import { supabaseServer } from "./supabase-server";
+import { supabaseServer } from "@/utils/supabase/admin";
 
 export async function uploadSingleFile(file: File): Promise<string> {
   if (!file || file.size === 0) {

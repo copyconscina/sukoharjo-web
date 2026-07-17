@@ -2,12 +2,19 @@
 
 import { useState } from "react";
 import { Berita } from "@/lib/data";
-import { addBeritaApi, deleteBeritaApi } from "@/lib/beritaApi";
-import { uploadMultipleImagesAction } from "@/app/admin/actions";
+import { addBeritaAction, deleteBeritaAction, uploadMultipleImagesAction } from "@/app/admin/actions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Props {
   initialNews: Berita[];
@@ -56,7 +63,7 @@ export default function BeritaClientPage({ initialNews }: Props) {
       }
 
       // 2. Save news article
-      const res = await addBeritaApi(tag, title.trim(), desc.trim(), uploadedUrlsString);
+      const res = await addBeritaAction(tag, title.trim(), desc.trim(), uploadedUrlsString);
       if (res.success) {
         const dateStr = res.item.date;
         const newArticle: Berita = {
@@ -94,7 +101,7 @@ export default function BeritaClientPage({ initialNews }: Props) {
     setSuccess(null);
 
     try {
-      const res = await deleteBeritaApi(targetTitle);
+      const res = await deleteBeritaAction(targetTitle);
       if (res.success) {
         setNews(news.filter((b) => b.title !== targetTitle));
         setSuccess("Berita berhasil dihapus!");
@@ -133,16 +140,17 @@ export default function BeritaClientPage({ initialNews }: Props) {
                 <label className="block text-xs font-mono uppercase tracking-wider text-[color:var(--ink-soft)] mb-1">
                   Kategori / Tag
                 </label>
-                <select
-                  value={tag}
-                  onChange={(e) => setTag(e.target.value)}
-                  className="w-full h-10 px-3 border border-[color:var(--line)] bg-[color:var(--parchment)] rounded-xl text-sm font-sans outline-none focus:border-[color:var(--forest)]"
-                >
-                  <option value="Kegiatan">Kegiatan</option>
-                  <option value="Pengumuman">Pengumuman</option>
-                  <option value="Agenda">Agenda</option>
-                  <option value="Pembangunan">Pembangunan</option>
-                </select>
+                <Select value={tag} onValueChange={(val) => setTag(val)}>
+                  <SelectTrigger className="w-full h-10 px-3 border border-[color:var(--line)] bg-[color:var(--parchment)] rounded-xl text-sm font-sans outline-none focus:border-[color:var(--forest)] text-[color:var(--ink)] focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:border-[color:var(--forest)]">
+                    <SelectValue placeholder="Pilih Kategori / Tag" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[color:var(--card)] border border-[color:var(--line)] text-[color:var(--ink)]">
+                    <SelectItem value="Kegiatan" className="focus:bg-[color:var(--parchment)] focus:text-[color:var(--forest-deep)]">Kegiatan</SelectItem>
+                    <SelectItem value="Pengumuman" className="focus:bg-[color:var(--parchment)] focus:text-[color:var(--forest-deep)]">Pengumuman</SelectItem>
+                    <SelectItem value="Agenda" className="focus:bg-[color:var(--parchment)] focus:text-[color:var(--forest-deep)]">Agenda</SelectItem>
+                    <SelectItem value="Pembangunan" className="focus:bg-[color:var(--parchment)] focus:text-[color:var(--forest-deep)]">Pembangunan</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>
@@ -163,7 +171,7 @@ export default function BeritaClientPage({ initialNews }: Props) {
                 <label className="block text-xs font-mono uppercase tracking-wider text-[color:var(--ink-soft)] mb-1">
                   Isi / Ringkasan Berita *
                 </label>
-                <textarea
+                <Textarea
                   placeholder="Tuliskan isi berita di sini..."
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}

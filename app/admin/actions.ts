@@ -56,11 +56,11 @@ export async function addBeritaAction(tag: string, title: string, desc: string, 
     images,
   };
 
-  await addBerita(newBerita);
+  const saved = await addBerita(newBerita);
   
   revalidatePath("/");
   revalidatePath("/berita");
-  return { success: true };
+  return { success: true, item: saved };
 }
 
 export async function deleteBeritaAction(title: string) {
